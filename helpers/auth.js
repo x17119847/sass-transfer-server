@@ -34,7 +34,7 @@ module.exports = {
             next();
           })
           .catch(function (error) {
-            res.send(error)
+            res.json(error)
           });
 
       });
