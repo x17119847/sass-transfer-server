@@ -1,0 +1,18 @@
+<header class="container-fluid masthead mb-auto">
+  <div class="inner">
+    <h3 class="masthead-brand">SASS Transfer Service</h3>
+    <nav class="nav nav-masthead justify-content-center">
+      <a class="nav-link {{#if homeLink}} active {{/if}}" href="/">Home</a>
+            
+      {{#if user}}
+      <a class="nav-link {{#if dashboardLink}} active {{/if}}" href="/dashboard">Dashboard</a>      
+      <a class="nav-link" href="/logout">
+        <img src="{{user.image}}" class="rounded-circle m-auto" width="30"> Logout {{user.firstName}}
+      </a>
+      {{else}}
+      <a class="nav-link {{#if aboutLink}} active {{/if}}" href="/about">About</a>
+      <a class="nav-link {{#if loginLink}} active {{/if}}" href="/login">Login or Register</a>
+      {{/if}}
+    </nav>
+  </div>
+</header>

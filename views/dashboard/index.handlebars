@@ -1,0 +1,58 @@
+<div class="row">
+
+  {{> _dashboard-nav}}
+
+  <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
+      
+      {{#if dashboardActive}}
+        {{> _dashboard}}
+      {{/if}}
+
+      {{#if companyActive}}
+      {{> _company}}
+      {{/if}}
+
+      {{#if bookingsActive}}
+      {{> _bookings}}
+      {{/if}}
+
+      {{#if customersActive}}
+      {{> _customers}}
+      {{/if}}
+
+      {{#if basesActive}}
+      {{> _bases}}
+      {{/if}}
+
+      {{#if servicesActive}}
+      {{> _services}}
+      {{/if}}
+
+      {{#if routesActive}}
+      {{> _routes}}
+      {{/if}}
+
+      {{#if vehicleTypesActive}}
+      {{> _vehicle-types}}
+      {{/if}}
+
+      {{#if vehiclesActive}}
+      {{> _vehicles}}
+      {{/if}}
+
+      {{#if driversActive}}
+      {{> _drivers}}
+      {{/if}}
+
+      {{#if paxTypesActive}}
+      {{> _pax-types}}
+      {{/if}}
+
+
+    </div>        
+  </main>
+  
+</div>
+
+
