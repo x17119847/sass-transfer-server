@@ -34,7 +34,7 @@ module.exports = {
             next();
           })
           .catch(function (error) {
-            res.json(error)
+            res.send('Could not authenticate on API Server ' + error)
           });
 
       });
