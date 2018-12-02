@@ -7,6 +7,7 @@ const exphbs = require('express-handlebars');
 const path = require('path');
 const bodyParser = require('body-parser');
 const flash = require('connect-flash');
+const axios = require('axios');
 
 // Load Models
 require('./models/User');
@@ -19,6 +20,7 @@ require('./config/passport')(passport);
 const index = require('./routes/index');
 const auth = require('./routes/auth');
 const dashboard = require('./routes/dashboard');
+const company = require('./routes/company');
 
 // Load Keys
 const keys = require('./config/keys');
@@ -88,6 +90,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/auth', auth);
 app.use('/dashboard', dashboard);
+app.use('/company', company);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

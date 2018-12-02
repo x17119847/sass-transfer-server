@@ -1,13 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const { ensureAuthenticated } = require('../helpers/auth');
+const { 
+  ensureAuthenticated, 
+  authenticateServer, 
+  validateWebUser
+} = require('../helpers/auth');
 const mongoose = require('mongoose');
+const axios = require('axios');
+
 
 // Load Models
 const User = mongoose.model('users');
 
 // Dashboard Index
-router.get('/', ensureAuthenticated, (req, res) => {
+router.get('/', 
+  ensureAuthenticated, 
+  authenticateServer,
+  (req, res) => {
   res.render('dashboard', {
     dashboardLink: true,
     dashboardActive: true
@@ -15,10 +24,15 @@ router.get('/', ensureAuthenticated, (req, res) => {
 });
 
 // Company
-router.get('/company', ensureAuthenticated, (req, res) => {
+router.get('/company', 
+  ensureAuthenticated, 
+  authenticateServer, 
+  validateWebUser,
+  (req, res) => {
   res.render('dashboard', {
     dashboardLink: true,
-    companyActive: true
+    companyActive: true,
+    company: req.session.company
   })
 });
 

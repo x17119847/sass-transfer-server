@@ -13,7 +13,7 @@ router.get('/google/callback',
     failureRedirect: '/'
   }), (req, res) => {
     // Successfull authentication
-    res.redirect('/dashboard');
+    res.redirect('/dashboard/company');
 })
 
 // Verify Authentication

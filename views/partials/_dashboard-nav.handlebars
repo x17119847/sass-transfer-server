@@ -2,11 +2,13 @@
   <div class="sidebar-sticky">
     <ul class="nav flex-column">
 
+      {{#if company.name}}
       <li class="nav-item">
         <a class="nav-link {{#if dashboardActive}}active{{/if}}" href="/dashboard">
           Dashboard
         </a>
       </li>
+      {{/if}}
 
       <li class="nav-item">
         <a class="nav-link {{#if companyActive}}active{{/if}}" href="/dashboard/company">
@@ -14,6 +16,7 @@
         </a>
       </li>
 
+      {{#if company.name}}
       <li class="nav-item">
         <a class="nav-link {{#if bookingsActive}}active{{/if}}" href="/dashboard/bookings">
           Bookings
@@ -67,7 +70,7 @@
           Pax Types
         </a>
       </li>
-
+      {{/if}}
 
     </ul>
   </div>
