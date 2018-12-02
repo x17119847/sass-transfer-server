@@ -56,7 +56,7 @@ module.exports = {
             email: req.user.email  
           })
             .then(response => {              
-              req.session.company = response.data;              
+              req.session.companyID = response.data.id;              
               next();
             })
             .catch(error => {
@@ -64,8 +64,8 @@ module.exports = {
             });
         } 
         else {           
-          //console.log(response.data)
-          req.session.company = response.data[0];                      
+          console.log(response.data[0].id)
+          req.session.companyID = response.data[0].id;                      
           next();
         }
       })

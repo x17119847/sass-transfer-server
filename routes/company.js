@@ -16,7 +16,7 @@ router.post('/', (req, res) => {
     email: req.session.company.email
   })
     .then(response => {
-      req.session.company = response.data;
+      req.session.companyID = response.data.id;
       req.flash('success_msg','Company name updated.')
       res.redirect('/dashboard/company')
     })

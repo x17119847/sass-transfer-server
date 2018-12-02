@@ -7,6 +7,7 @@ const {
 } = require('../helpers/auth');
 const mongoose = require('mongoose');
 const axios = require('axios');
+const keys = require('../config/keys');
 
 
 // Load Models
@@ -29,11 +30,16 @@ router.get('/company',
   authenticateServer, 
   validateWebUser,
   (req, res) => {
-  res.render('dashboard', {
-    dashboardLink: true,
-    companyActive: true,
-    company: req.session.company
-  })
+    axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}?access_token=${req.session.serverAccessToken}`)
+    .then(response => {
+      res.render('dashboard', {
+        dashboardLink: true,
+        companyActive: true,
+        companyID: req.session.companyID,
+        company: response.data
+      })
+    })
+      .catch(error => console.log('error getting company', `${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}access_token=${req.session.serverAccessToken}`));
 });
 
 // Bookings
