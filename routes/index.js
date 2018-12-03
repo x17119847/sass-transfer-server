@@ -12,7 +12,6 @@ router.get('/', (req, res) => {
   })
 });
 
-
 // Login Page
 router.get('/login', (req, res) => {
   res.render('index/login', {
@@ -27,7 +26,6 @@ router.get('/logout', (req, res) => {
   res.redirect('/login');
 });
 
-
 // About - Learn More
 router.get('/about', (req, res) => {
   res.render('index/about', {
@@ -35,5 +33,9 @@ router.get('/about', (req, res) => {
   })
 });
 
+// Block routes
+router.get('/company', (req, res) => {
+  res.redirect('/');
+})
 
 module.exports = router;

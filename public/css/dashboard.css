@@ -1,9 +1,64 @@
+@import url('https://fonts.googleapis.com/css?family=Niramit:400,500,900');
+html, body {
+   font-family: "Niramit", sans-serif;
+   width: 100%;
+   height: 100%;
+   height: 100%;
+   background-color: #2c3e50;
 
-.feather {
-  width: 16px;
-  height: 16px;
-  vertical-align: text-bottom;
+   /* http://www.pngall.com/world-map-png */
+   background-image: url('../images/world-map-png-35426.png');
+
+   background-position: center;
+   background-repeat: no-repeat;
+   background-size: 50%;
+   color: #ecf0f1;
 }
+
+/* Alerts */
+.alert.alert-danger {
+  background-color: rgba(192,57,43 ,0.2);
+  color: white;
+  border-color: rgba(231,76,60 ,1);
+}
+.alert.alert-success {
+  background-color: rgba(46,204,113 ,0.2);
+  color: white;
+  border-color: rgba(39,174,96 ,1);
+}
+
+/* Buttons */
+.btn-blue {
+  background-color: #3498db;
+  color: white;
+}
+.btn-red {
+  background-color: #c0392b;
+  color: white;
+}
+
+.bg-dark-transparent {
+  background-color: rgba(0,0,0,0.7);
+}
+
+
+footer {
+  position: fixed;
+  z-index: 999;
+  bottom: 0;
+  width: 100%;
+  line-height: 20px;
+  padding: 10px 20px 0px 20px;
+  background-color: #2c3e50;
+  color: white;
+}
+footer a {
+  color:#ecf0f1;
+}
+footer a:hover {
+  color: white;
+}
+
 
 /*
  * Sidebar
@@ -15,9 +70,8 @@
   bottom: 0;
   left: 0;
   z-index: 100; /* Behind the navbar */
-  padding: 68px 0 0 20px; /* Height of navbar */
+  padding: 48px 0 0; /* Height of navbar */
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-
 }
 
 .sidebar-sticky {
@@ -29,30 +83,18 @@
   overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
 }
 
-@supports ((position: -webkit-sticky) or (position: sticky)) {
-  .sidebar-sticky {
-    position: -webkit-sticky;
-    position: sticky;
-  }
-}
 
-.sidebar .nav-link {
+.nav-link {
   font-weight: 500;
-  color: #ffffff;
+  color: #ecf0f1;
 }
 
-.sidebar .nav-link .feather {
-  margin-right: 4px;
-  color: #999;
+.nav-link.active {
+  color: #3498db;
 }
 
-.sidebar .nav-link.active {
-  color: #007bff;
-}
-
-.sidebar .nav-link:hover .feather,
-.sidebar .nav-link.active .feather {
-  color: inherit;
+.nav-link:hover {
+  color: #f1c40f;
 }
 
 .sidebar-heading {
@@ -65,7 +107,7 @@
  */
 
 [role="main"] {
-  padding-top: 8px; /* Space for fixed navbar */
+  padding-top: 48px; /* Space for fixed navbar */
 }
 
 /*
@@ -75,7 +117,7 @@
 .navbar-brand {
   padding-top: .75rem;
   padding-bottom: .75rem;
-  font-size: 1rem;
+  font-size: 1.5rem;
   background-color: rgba(0, 0, 0, .25);
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
 }

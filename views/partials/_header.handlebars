@@ -1,18 +1,25 @@
-<header class="container-fluid masthead mb-auto">
-  <div class="inner">
-    <h3 class="masthead-brand">SASS Transfer Service</h3>
-    <nav class="nav nav-masthead justify-content-center">
+<nav class="navbar navbar-dark fixed-top bg-dark-transparent flex-md-nowrap p-0 shadow">
+  <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">SASS Transfer Service</a>
+  <ul class="nav justify-content-center">
+    <li class="nav-item">
       <a class="nav-link {{#if homeLink}} active {{/if}}" href="/">Home</a>
-            
-      {{#if user}}
-      <a class="nav-link {{#if dashboardLink}} active {{/if}}" href="/dashboard">Dashboard</a>      
+    </li>
+    {{#if user}}
+    <li class="nav-item">
+      <a class="nav-link {{#if dashboardLink}} active {{/if}}" href="/dashboard">Dashboard</a>
+    </li>
+    <li class="nav-item">
       <a class="nav-link" href="/logout">
         <img src="{{user.image}}" class="rounded-circle m-auto" width="30"> Logout {{user.firstName}}
       </a>
-      {{else}}
+    </li>
+    {{else}}
+    <li class="nav-item">
       <a class="nav-link {{#if aboutLink}} active {{/if}}" href="/about">About</a>
+    </li>
+    <li class="nav-item">
       <a class="nav-link {{#if loginLink}} active {{/if}}" href="/login">Login or Register</a>
-      {{/if}}
-    </nav>
-  </div>
-</header>
+    </li>
+    {{/if}}
+  </ul>
+</nav>

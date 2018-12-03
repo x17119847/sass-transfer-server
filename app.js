@@ -21,6 +21,7 @@ const index = require('./routes/index');
 const auth = require('./routes/auth');
 const dashboard = require('./routes/dashboard');
 const company = require('./routes/company');
+const paxTypes = require('./routes/paxTypes');
 
 // Load Keys
 const keys = require('./config/keys');
@@ -91,6 +92,7 @@ app.use('/', index);
 app.use('/auth', auth);
 app.use('/dashboard', dashboard);
 app.use('/company', company);
+app.use('/pax-types', paxTypes);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

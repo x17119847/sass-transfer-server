@@ -1,1 +1,19 @@
-<h1>Pax Types</h1>
+
+<div class="container-fluid">
+  <h1>Pax Types</h1>
+  {{#if paxTypes}}
+  {{else}}
+  <div class="">
+    <i class="fa fa-info-circle"></i> You do not have any Pax Types. Example: 2-seater, 5-seater, 7-seater, etc.
+  </div>
+  {{/if}}
+
+  <a class="btn btn-success mt-3 mb-3" href="/dashboard/pax-types/add">Add Pay Type</a>
+  
+  {{#each paxTypes}}
+  <div class="bg-dark-transparent mb-2 p-3">
+    {{paxType}}-seater
+  </div>
+  {{/each}}
+
+</div>

@@ -1,14 +1,12 @@
-<nav class="col-md-2 d-none d-md-block sidebar">
+<nav class="col-md-2 d-none d-md-block sidebar bg-dark-transparent">
   <div class="sidebar-sticky">
     <ul class="nav flex-column">
 
-      {{#if company.name}}
       <li class="nav-item">
         <a class="nav-link {{#if dashboardActive}}active{{/if}}" href="/dashboard">
           Dashboard
         </a>
       </li>
-      {{/if}}
 
       <li class="nav-item">
         <a class="nav-link {{#if companyActive}}active{{/if}}" href="/dashboard/company">
@@ -16,7 +14,6 @@
         </a>
       </li>
 
-      {{#if company.name}}
       <li class="nav-item">
         <a class="nav-link {{#if bookingsActive}}active{{/if}}" href="/dashboard/bookings">
           Bookings
@@ -66,11 +63,10 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link {{#if paxTypesActive}}active{{/if}}" href="/dashboard/pax-types">
+        <a class="nav-link {{#if paxTypesActive}}active{{/if}} {{#if paxTypesAddActive}}active{{/if}}" href="/dashboard/pax-types">
           Pax Types
         </a>
       </li>
-      {{/if}}
 
     </ul>
   </div>

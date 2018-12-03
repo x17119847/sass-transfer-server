@@ -1,1 +1,10 @@
-<h1>Bookings</h1>
+<div class="containe-fluid">
+  <h1>Bookings</h1>
+  {{#if bookings}}
+
+  {{else}}
+  <div class="alert alert-secondary">
+    <i class="fa fa-info-circle"></i> You do not have any bookings.
+  </div>
+  {{/if}}
+</div>
