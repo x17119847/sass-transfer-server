@@ -45,6 +45,14 @@
       {{> _drivers}}
       {{/if}}
 
+      {{#if driversAddActive}}
+      {{> _drivers-add}}
+      {{/if}}
+
+      {{#if driversEditActive}}
+      {{> _drivers-edit}}
+      {{/if}}
+
       {{#if paxTypesActive}}
       {{> _pax-types}}
       {{/if}}

@@ -116,16 +116,4 @@ router.get('/vehicles', ensureAuthenticated, (req, res) => {
   })
 });
 
-// Drivers
-router.get('/drivers', ensureAuthenticated, (req, res) => {
-  res.render('dashboard', {
-    dashboardLink: true,
-    driversActive: true
-  })
-});
-
-
-
-
-
 module.exports = router;

@@ -67,7 +67,7 @@ router.post('/',
 
   if(!paxType > 0) {
     req.flash('error_msg', 'Please select a Pax Type');
-    res.redirect('dashboard/pax-types/add');
+    res.redirect('/pax-types/add');
   }
   else {
     // Send Post Request to API Server
@@ -97,7 +97,7 @@ router.post('/edit/:id',
 
     if (!paxType > 0) {
       req.flash('error_msg', 'Please select a Pax Type');
-      res.redirect('dashboard/pax-types/add');
+      res.redirect('/pax-types/edit/' + req.params.id);
     }
     else {
       // Send Post Request to API Server

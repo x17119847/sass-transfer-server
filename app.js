@@ -22,6 +22,7 @@ const auth = require('./routes/auth');
 const dashboard = require('./routes/dashboard');
 const company = require('./routes/company');
 const paxTypes = require('./routes/paxTypes');
+const drivers = require('./routes/drivers');
 
 // Load Keys
 const keys = require('./config/keys');
@@ -93,6 +94,7 @@ app.use('/auth', auth);
 app.use('/dashboard', dashboard);
 app.use('/company', company);
 app.use('/pax-types', paxTypes);
+app.use('/drivers', drivers);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
