@@ -124,32 +124,8 @@ router.get('/drivers', ensureAuthenticated, (req, res) => {
   })
 });
 
-// Pax Types
-router.get('/pax-types', 
-  ensureAuthenticated,
-  (req, res) => {
-  axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/paxTypes?access_token=${req.session.serverAccessToken}`)
-    .then(response => {
-      res.render('dashboard', {
-        dashboardLink: true,
-        paxTypesActive: true,
-        paxTypes: response.data,
-        companyID: req.session.companyID
-      })
-    })
-    .catch(error => console.log(error));
-});
 
-// Pax Types - Add Page
-router.get('/pax-types/add',
-  ensureAuthenticated,
-  (req, res) => {
-    res.render('dashboard', {
-      dashboardLink: true,
-      paxTypesAddActive: true,
-      companyID: req.session.companyID
-    })
 
-  });
+
 
 module.exports = router;
