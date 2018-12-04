@@ -1,25 +1,33 @@
 <div class="bg-dark-transparent p-4">
-  <h1>Edit Pax Type</h1>  
+  <h1>Edit Age Group</h1>  
 
   <form class="form-inline" method="POST" action="/pax-types/edit/{{paxType.id}}">
-    <label class="my-1 mr-2" for="paxType">Select one </label>
-    <select class="custom-select my-1 mr-sm-2" id="paxType" name="paxType">
-      {{#select paxType.paxType}}
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-      <option value="6">6</option>
-      <option value="7">7</option>
-      <option value="8">8</option>
-      <option value="9">9</option>
-      <option value="10">10</option>
-      <option value="11">11</option>
-      <option value="12">12</option>  
+    
+    <!-- Age From -->
+    <label class="my-1 mr-2" for="age_from">Age From </label>
+    <select class="custom-select my-1 mr-sm-2" id="age_from" name="age_from">
+      {{#select paxType.age_from}}
+      {{#times 99}}
+      <option value="{{this}}">{{this}}</option>
+      {{/times}}
       {{/select}}    
     </select>
 
-    <button type="submit" class="btn btn-primary my-1">Submit</button>
+    <!-- Age To -->
+    <label class="my-1 mr-2" for="age_to">Age To</label>
+    <select class="custom-select my-1 mr-sm-2" id="age_to" name="age_to">
+      {{#select paxType.age_to}}
+      {{#times 99}}
+      <option value="{{this}}">{{this}}</option>
+      {{/times}}
+      {{/select}}
+    </select>
+
+    <!-- Age Group Name -->
+    <label class="my-1 mr-2" for="name">Name of Age Group</label>
+    <input type="text" name="name" id="name" value="{{paxType.name}}" placeholder="Name of Age Group">
+    
+    <button type="submit" class="btn btn-primary my-1 ml-2">Submit</button>
   </form>
 
 </div>

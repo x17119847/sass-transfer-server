@@ -14,11 +14,30 @@ module.exports = {
   // Authenticate Server
   authenticateServer: (req, res, next) => {
 
-    let checkTokenURL = `${keys.sassTransferServiceAPIURI}/api/Users/${req.session.serverUserID}?access_token=${req.session.serverAccessToken}`;
+    // If there are no Session vars for serverUserID or serverAccessToken, then login and next()
     let loginURL = `${keys.sassTransferServiceAPIURI}/api/Users/login`;
 
-    // Check if token is valid
-    axios.get(checkTokenURL)
+    if(req.session.serverUserID == undefined || req.session.serverAccessToken == undefined) {
+      console.log('NO SESSION VARS')
+      axios.post(loginURL, {
+        email: keys.sassTransferServiceAPIEmail,
+        password: keys.sassTransferServiceAPIPassword
+      })
+      .then(function (response) {
+        req.session.serverAccessToken = response.data.id;
+        req.session.serverUserID = response.data.userId;
+        next();
+      })
+      .catch(function (error) {
+        res.send(`Could not authenticate on API Server: ${error}, ${loginURL}`)
+      });
+    }
+    else {
+      console.log('have session vars')
+      // Check if token is valid
+      let checkTokenURL = `${keys.sassTransferServiceAPIURI}/api/Users/${req.session.serverUserID}?access_token=${req.session.serverAccessToken}`;
+
+      axios.get(checkTokenURL)
       .then(response => {
         next();
       })
@@ -28,16 +47,17 @@ module.exports = {
           email: keys.sassTransferServiceAPIEmail,
           password: keys.sassTransferServiceAPIPassword
         })
-          .then(function (response) {            
-            req.session.serverAccessToken = response.data.id;
-            req.session.serverUserID = response.data.userId;
-            next();
-          })
-          .catch(function (error) {
-            res.send(`Could not authenticate on API Server: ${error}, ${checkTokenURL}, ${loginURL}`)
-          });
+        .then(function (response) {            
+          req.session.serverAccessToken = response.data.id;
+          req.session.serverUserID = response.data.userId;
+          next();
+        })
+        .catch(function (error) {
+          res.send(`Could not authenticate on API Server: ${error}, ${checkTokenURL}, ${loginURL}`)
+        });
 
       });
+    }
   },
 
   // Validate Web User

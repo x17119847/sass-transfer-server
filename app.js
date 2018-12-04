@@ -30,7 +30,8 @@ const keys = require('./config/keys');
 // Handlebars Helpers
 const {
   formatDate,
-  select
+  select,
+  times
 } = require('./helpers/hbs');
 
 // Mongoose Connect
@@ -55,7 +56,8 @@ app.use(bodyParser.json());
 app.engine('handlebars', exphbs({
   helpers: {
     formatDate,
-    select
+    select,
+    times
   },
   defaultLayout: 'main'
 }));

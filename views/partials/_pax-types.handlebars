@@ -1,14 +1,14 @@
 
 <div class="container-fluid">
-  <h1>Pax Types</h1>
+  <h1>Age Groups</h1>
   {{#if paxTypes}}
   {{else}}
   <div class="">
-    <i class="fa fa-info-circle"></i> You do not have any Pax Types. Example: 2-seater, 5-seater, 7-seater, etc.
+    <i class="fa fa-info-circle"></i> You have not yet set up any Age Groups.
   </div>
   {{/if}}
 
-  <a class="btn btn-success mt-3 mb-3" href="/pax-types/add">Add Pay Type</a>
+  <a class="btn btn-success mt-3 mb-3" href="/pax-types/add">Add Age Group</a>
   
   {{#each paxTypes}}
   <div class="bg-dark-transparent mb-2 p-3">
@@ -17,7 +17,7 @@
       <a class="btn btn-warning btn-sm mx-1" href="/pax-types/edit/{{id}}"><i class="fas fa-pencil-alt"></i> Edit</button>
       <a class="btn btn-danger btn-sm mx-1" href="/pax-types/delete/{{id}}"><i class="fas fa-trash-alt"></i> Delete</a>
     </div>
-    {{paxType}}-seater
+    {{name}}: {{age_from}}-{{age_to}} years old. 
 
   </div>
   {{/each}}
