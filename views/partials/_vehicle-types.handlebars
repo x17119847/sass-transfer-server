@@ -1,1 +1,25 @@
-<h1>Vehicle Types</h1>
+
+<div class="container-fluid">
+  <h1>Vehicle Types</h1>
+  {{#if vehicleTypes}}
+  {{else}}
+  <div class="">
+    <i class="fa fa-info-circle"></i> You have not yet set up any Vehicle Types.
+  </div>
+  {{/if}}
+
+  <a class="btn btn-success mt-3 mb-3" href="/vehicle-types/add">Add Vehicle Type</a>
+  
+  {{#each vehicleTypes}}
+  <div class="bg-dark-transparent mb-2 p-3">
+    
+    <div class="float-right">
+      <a class="btn btn-warning btn-sm mx-1" href="/vehicle-types/edit/{{id}}"><i class="fas fa-pencil-alt"></i> Edit</button>
+      <a class="btn btn-danger btn-sm mx-1" href="/vehicle-types/delete/{{id}}"><i class="fas fa-trash-alt"></i> Delete</a>
+    </div>
+    {{name}}, Maximum Passengers {{max_pax}}. 
+
+  </div>
+  {{/each}}
+
+</div>

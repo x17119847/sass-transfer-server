@@ -100,13 +100,6 @@ router.get('/routes', ensureAuthenticated, (req, res) => {
   })
 });
 
-// Vehicle Types
-router.get('/vehicle-types', ensureAuthenticated, (req, res) => {
-  res.render('dashboard', {
-    dashboardLink: true,
-    vehicleTypesActive: true
-  })
-});
 
 // Vehicles
 router.get('/vehicles', ensureAuthenticated, (req, res) => {

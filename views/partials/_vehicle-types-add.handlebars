@@ -1,0 +1,23 @@
+<div class="bg-dark-transparent p-4">
+  <h1>Add Vehicle Type</h1>
+  <p><i class="fas fa-info-circle"></i> Example of Vehicle Type: "Name: 2-Seater, Maximum Passengers: 2".</p>
+
+  <form class="form-inline" method="POST" action="/vehicle-types">
+    <!-- Max Passengers -->
+    <label class="my-1 mr-2" for="max_pax">Maximum Passengers </label>
+    <select class="custom-select my-1 mr-sm-2" id="max_pax" name="max_pax">      
+      {{#select max_pax}}
+      {{#times 25}}
+      <option value="{{this}}">{{this}}</option>
+      {{/times}}
+      {{/select}}
+    </select>
+
+    <!-- Vehicle Type Name -->
+    <label class="my-1 mr-2" for="name">Name of Vehicle Type</label>
+    <input type="text" name="name" id="name" placeholder="Name of Vehicle Type" value="{{name}}">
+
+    <button type="submit" class="btn btn-primary my-1 ml-2">Submit</button>
+  </form>
+
+</div>

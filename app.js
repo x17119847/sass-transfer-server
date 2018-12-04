@@ -23,6 +23,7 @@ const dashboard = require('./routes/dashboard');
 const company = require('./routes/company');
 const paxTypes = require('./routes/paxTypes');
 const drivers = require('./routes/drivers');
+const vehicleTypes = require('./routes/vehicleTypes');
 
 // Load Keys
 const keys = require('./config/keys');
@@ -97,6 +98,7 @@ app.use('/dashboard', dashboard);
 app.use('/company', company);
 app.use('/pax-types', paxTypes);
 app.use('/drivers', drivers);
+app.use('/vehicle-types', vehicleTypes);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

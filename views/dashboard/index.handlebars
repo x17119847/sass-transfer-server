@@ -5,42 +5,60 @@
   <div class="col-lg-12 mt-5">
     <div class="mt-2">
       
+      <!-- Dashboard -->
       {{#if dashboardActive}}
         {{> _dashboard}}
       {{/if}}
 
+      <!-- Company -->
       {{#if companyActive}}
       {{> _company}}
       {{/if}}
 
+      <!-- Bookings -->
       {{#if bookingsActive}}
       {{> _bookings}}
       {{/if}}
 
+      <!-- Customers -->
       {{#if customersActive}}
       {{> _customers}}
       {{/if}}
 
+      <!-- Bases -->
       {{#if basesActive}}
       {{> _bases}}
       {{/if}}
 
+      <!-- Services -->      
       {{#if servicesActive}}
       {{> _services}}
       {{/if}}
 
+      <!-- Routes -->
       {{#if routesActive}}
       {{> _routes}}
       {{/if}}
 
+      <!-- Vehicle Types -->
       {{#if vehicleTypesActive}}
       {{> _vehicle-types}}
       {{/if}}
 
+      {{#if vehicleTypesAddActive}}
+      {{> _vehicle-types-add}}
+      {{/if}}
+      
+      {{#if vehicleTypesEditActive}}
+      {{> _vehicle-types-edit}}
+      {{/if}}
+
+      <!-- Vehicles -->
       {{#if vehiclesActive}}
       {{> _vehicles}}
       {{/if}}
 
+      <!-- Drivers -->
       {{#if driversActive}}
       {{> _drivers}}
       {{/if}}
@@ -53,6 +71,7 @@
       {{> _drivers-edit}}
       {{/if}}
 
+      <!-- Age Groups -->
       {{#if paxTypesActive}}
       {{> _pax-types}}
       {{/if}}
