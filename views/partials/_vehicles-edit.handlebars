@@ -1,0 +1,35 @@
+<div class="bg-dark-transparent p-4">
+  <h1>Edit Vehicle</h1>
+
+  <form class="form" method="POST" action="/vehicles/edit/{{vehicle.id}}">
+
+    <!-- Vehicle Type -->
+    <div class="form-group">
+      <label class="my-1 mr-2" for="vehicleTypeId">Vehicle Type</label>
+      <select class="custom-select my-1 mr-sm-2" id="vehicleTypeId" name="vehicleTypeId">
+        
+        <option value="">Vehicle Type</option>        
+        {{#each vehicleTypes}}
+        <option value="{{id}}">{{name}} {{id}}</option>
+        {{/each}}
+        
+      </select>
+    </div>
+
+    <!-- Vehicle Name -->
+    <div class="form-group">
+      <label class="my-1 mr-2" for="name">Vehicle Make and Model</label>
+      <input type="text" name="name" id="name" class="form-control" placeholder="Vehicle Make and Model" value="{{vehicle.name}}">
+    </div>
+
+    <!-- Registration -->
+    <div class="form-group">
+      <label class="my-1 mr-2" for="registration">Vehicle Registration (Optional)</label>
+      <input type="text" name="registration" class="form-control" id="registration" placeholder="Vehicle Registration"
+        value="{{vehicle.registration}}">
+    </div>
+
+    <button type="submit" class="btn btn-primary my-1 ml-2">Submit</button>
+  </form>
+
+</div>

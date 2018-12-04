@@ -58,6 +58,14 @@
       {{> _vehicles}}
       {{/if}}
 
+      {{#if vehiclesAddActive}}
+      {{> _vehicles-add}}
+      {{/if}}
+      
+      {{#if vehiclesEditActive}}
+      {{> _vehicles-edit}}
+      {{/if}}
+
       <!-- Drivers -->
       {{#if driversActive}}
       {{> _drivers}}

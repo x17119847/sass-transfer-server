@@ -1,1 +1,25 @@
-<h1>Vehicles</h1>
+
+<div class="container-fluid">
+  <h1>Vehicles</h1>
+  {{#if vehicles}}
+  {{else}}
+  <div class="">
+    <i class="fa fa-info-circle"></i> You have not yet set up any Vehicles.
+  </div>
+  {{/if}}
+
+  <a class="btn btn-success mt-3 mb-3" href="/vehicles/add">Add Vehicle</a>
+  
+  {{#each vehicles}}
+  <div class="bg-dark-transparent mb-2 p-3">
+    
+    <div class="float-right">
+      <a class="btn btn-warning btn-sm mx-1" href="/vehicles/edit/{{id}}"><i class="fas fa-pencil-alt"></i> Edit</button>
+      <a class="btn btn-danger btn-sm mx-1" href="/vehicles/delete/{{id}}"><i class="fas fa-trash-alt"></i> Delete</a>
+    </div>
+    {{name}} ({{vehicleType.name}}) {{#if registration}}Registration: {{registration}}{{/if}}
+
+  </div>
+  {{/each}}
+
+</div>

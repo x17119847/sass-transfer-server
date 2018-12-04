@@ -101,12 +101,4 @@ router.get('/routes', ensureAuthenticated, (req, res) => {
 });
 
 
-// Vehicles
-router.get('/vehicles', ensureAuthenticated, (req, res) => {
-  res.render('dashboard', {
-    dashboardLink: true,
-    vehiclesActive: true
-  })
-});
-
 module.exports = router;

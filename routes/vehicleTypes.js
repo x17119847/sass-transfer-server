@@ -52,7 +52,7 @@ router.get('/edit/:id',
     .catch(error => console.log(error));
 });
 
-// Create Pax Type
+// Create Vehicle Type
 router.post('/', 
   authenticateServer,
   ensureAuthenticated,
@@ -99,7 +99,7 @@ router.post('/',
     }
 })
 
-// Edit Pax Type
+// Edit Vehicle Type
 router.post('/edit/:id',
   authenticateServer,
   ensureAuthenticated,
