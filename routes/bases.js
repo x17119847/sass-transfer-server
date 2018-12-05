@@ -6,7 +6,7 @@ const axios = require('axios');
 const keys = require('../config/keys');
 const async = require('async');
 
-// Vehicles Index
+// Bases Index
 router.get('/',
   authenticateServer,
   ensureAuthenticated,
@@ -44,7 +44,7 @@ router.get('/',
     });
 });
 
-// Vehicle - Add Page
+// Bases - Add Page
 router.get('/add',
   authenticateServer,
   ensureAuthenticated,
@@ -63,7 +63,7 @@ router.get('/add',
     .catch(error => console.log(error));
 });
 
-// Vehicle - Edit Page
+// Bases - Edit Page
 router.get('/edit/:id',
   authenticateServer,
   ensureAuthenticated,
@@ -90,7 +90,6 @@ router.get('/edit/:id',
         console.log(error);
       }
       else {        
-        //console.log(results);
         res.render('dashboard', {
           dashboardLink: true,
           vehiclesEditActive: true,
@@ -102,7 +101,7 @@ router.get('/edit/:id',
     });
 });
 
-// Create Vehicle
+// Base Create
 router.post('/', 
   authenticateServer,
   ensureAuthenticated,
@@ -156,7 +155,7 @@ router.post('/',
     }
 })
 
-// Edit Vehicle
+// Base Edit 
 router.post('/edit/:id',
   authenticateServer,
   ensureAuthenticated,
@@ -230,7 +229,7 @@ router.post('/edit/:id',
     }
   })
 
-// Delete Vehicle
+// Base Delete
 router.get('/delete/:id', 
   authenticateServer,
   ensureAuthenticated,

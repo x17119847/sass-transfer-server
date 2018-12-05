@@ -2,17 +2,16 @@
   <h1>Edit Vehicle</h1>
 
   <form class="form" method="POST" action="/vehicles/edit/{{vehicle.id}}">
-
+{{vehicle.vehicleType}}
     <!-- Vehicle Type -->
     <div class="form-group">
+      
       <label class="my-1 mr-2" for="vehicleTypeId">Vehicle Type</label>
       <select class="custom-select my-1 mr-sm-2" id="vehicleTypeId" name="vehicleTypeId">
-        
-        <option value="">Vehicle Type</option>        
+        <option value="">Vehicle Type</option>                
         {{#each vehicleTypes}}
-        <option value="{{id}}">{{name}} {{id}}</option>
+        <option value="{{id}}" {{isSelected id ../vehicle.vehicleTypeId}}>{{name}}</option>
         {{/each}}
-        
       </select>
     </div>
 

@@ -76,14 +76,6 @@ router.get('/customers',
   });
 
 
-// Service Bases
-router.get('/bases', ensureAuthenticated, (req, res) => {
-  res.render('dashboard', {
-    dashboardLink: true,
-    basesActive: true
-  })
-});
-
 // Services
 router.get('/services', ensureAuthenticated, (req, res) => {
   res.render('dashboard', {

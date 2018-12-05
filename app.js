@@ -25,6 +25,7 @@ const paxTypes = require('./routes/paxTypes');
 const drivers = require('./routes/drivers');
 const vehicleTypes = require('./routes/vehicleTypes');
 const vehicles = require('./routes/vehicles');
+const bases = require('./routes/bases');
 
 // Load Keys
 const keys = require('./config/keys');
@@ -32,8 +33,8 @@ const keys = require('./config/keys');
 // Handlebars Helpers
 const {
   formatDate,
-  select,
-  times
+  times,
+  isSelected
 } = require('./helpers/hbs');
 
 // Mongoose Connect
@@ -58,8 +59,8 @@ app.use(bodyParser.json());
 app.engine('handlebars', exphbs({
   helpers: {
     formatDate,
-    select,
-    times
+    times,
+    isSelected
   },
   defaultLayout: 'main'
 }));
@@ -101,6 +102,7 @@ app.use('/pax-types', paxTypes);
 app.use('/drivers', drivers);
 app.use('/vehicle-types', vehicleTypes);
 app.use('/vehicles', vehicles);
+app.use('/bases', bases);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

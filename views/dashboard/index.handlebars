@@ -30,6 +30,14 @@
       {{> _bases}}
       {{/if}}
 
+      {{#if basesAddActive}}
+      {{> _base-add}}
+      {{/if}}
+      
+      {{#if basesEditActive}}
+      {{> _base-edit}}
+      {{/if}}
+
       <!-- Services -->      
       {{#if servicesActive}}
       {{> _services}}
