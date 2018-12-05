@@ -1,0 +1,26 @@
+<div class="bg-dark-transparent p-4">
+  <h1>Edit Service</h1>
+
+  <form class="form" method="POST" action="/services/edit/{{service.id}}">
+
+    <!-- Service Name -->
+    <div class="form-group">
+      <label class="my-1 mr-2" for="name">Service Name</label>
+      <input type="text" name="name" id="name" class="form-control" placeholder="Service Name" value="{{service.name}}">
+    </div>
+
+    <!-- Service Base -->
+    <div class="form-group">
+      <label class="my-1 mr-2" for="baseId">Service Base</label>
+      <select class="custom-select my-1 mr-sm-2" id="baseId" name="baseId">
+        <option value="">Please select</option>
+        {{#each bases}}
+        <option value="{{id}}" {{isSelected id ../service.baseId}}>{{name}}</option>
+        {{/each}}
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary my-1 ml-2">Submit</button>
+  </form>
+
+</div>

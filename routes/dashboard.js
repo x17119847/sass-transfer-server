@@ -76,21 +76,5 @@ router.get('/customers',
   });
 
 
-// Services
-router.get('/services', ensureAuthenticated, (req, res) => {
-  res.render('dashboard', {
-    dashboardLink: true,
-    servicesActive: true
-  })
-});
-
-// Routes
-router.get('/routes', ensureAuthenticated, (req, res) => {
-  res.render('dashboard', {
-    dashboardLink: true,
-    routesActive: true
-  })
-});
-
 
 module.exports = router;

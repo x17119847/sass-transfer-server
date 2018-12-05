@@ -1,0 +1,32 @@
+<div class="bg-dark-transparent p-4">
+  <h1>Add Destination</h1>
+  <p><i class="fas fa-info-circle"></i> A Destination to a Service you provide. For example, you might have a Service called "Airport Runs", with Base in the Dublin Airport, and the Destination is Galway.</p>
+
+  <div class="row">
+    <div class="col-lg-6 col-md-12">
+      <form class="form" method="POST" action="/routes">
+
+        <!-- Route Name -->
+        <div class="form-group">
+          <label class="my-1 mr-2" for="name">Destination Name</label>
+          <input type="text" name="name" id="name" class="form-control" placeholder="Destination name" value="{{name}}">
+        </div>
+
+        <!-- Service -->
+        <div class="form-group">
+          <label class="my-1 mr-2" for="serviceId">Service</label>
+          <select class="custom-select my-1 mr-sm-2" id="serviceId" name="serviceId">
+            <option value="">Please select</option>
+            {{#each services}}
+            <option value="{{id}}" {{isSelected id ../serviceId}}>{{name}} - ({{base.name}})</option>
+            {{/each}}
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary my-1 ml-2">Submit</button>
+      </form>
+
+    </div>
+  </div>
+    
+</div>

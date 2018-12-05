@@ -1,0 +1,32 @@
+<div class="bg-dark-transparent p-4">
+  <h1>Add Service</h1>
+  <p><i class="fas fa-info-circle"></i> The name of a Service you provide, from a "Base" to another "Destination". Example: Airport to Hotel Transfers.</p>
+
+  <div class="row">
+    <div class="col-lg-6 col-md-12">
+      <form class="form" method="POST" action="/services">
+
+        <!-- Service Name -->
+        <div class="form-group">
+          <label class="my-1 mr-2" for="name">Service Name</label>
+          <input type="text" name="name" id="name" class="form-control" placeholder="Service name" value="{{name}}">
+        </div>
+
+        <!-- Base -->
+        <div class="form-group">
+          <label class="my-1 mr-2" for="baseId">Service Base</label>
+          <select class="custom-select my-1 mr-sm-2" id="baseId" name="baseId">
+            <option value="">Please select</option>
+            {{#each bases}}
+            <option value="{{id}}" {{isSelected id ../baseId}}>{{name}}</option>
+            {{/each}}
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary my-1 ml-2">Submit</button>
+      </form>
+
+    </div>
+  </div>
+    
+</div>

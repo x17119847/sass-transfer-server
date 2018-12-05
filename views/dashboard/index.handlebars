@@ -31,11 +31,11 @@
       {{/if}}
 
       {{#if basesAddActive}}
-      {{> _base-add}}
+      {{> _bases-add}}
       {{/if}}
       
       {{#if basesEditActive}}
-      {{> _base-edit}}
+      {{> _bases-edit}}
       {{/if}}
 
       <!-- Services -->      
@@ -43,9 +43,25 @@
       {{> _services}}
       {{/if}}
 
+      {{#if servicesAddActive}}
+      {{> _services-add}}
+      {{/if}}
+      
+      {{#if servicesEditActive}}
+      {{> _services-edit}}
+      {{/if}}
+
       <!-- Routes -->
       {{#if routesActive}}
       {{> _routes}}
+      {{/if}}
+
+      {{#if routesAddActive}}
+      {{> _routes-add}}
+      {{/if}}
+      
+      {{#if routesEditActive}}
+      {{> _routes-edit}}
       {{/if}}
 
       <!-- Vehicle Types -->

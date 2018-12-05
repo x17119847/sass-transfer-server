@@ -26,6 +26,8 @@ const drivers = require('./routes/drivers');
 const vehicleTypes = require('./routes/vehicleTypes');
 const vehicles = require('./routes/vehicles');
 const bases = require('./routes/bases');
+const services = require('./routes/services');
+const routes = require('./routes/routes');
 
 // Load Keys
 const keys = require('./config/keys');
@@ -103,6 +105,8 @@ app.use('/drivers', drivers);
 app.use('/vehicle-types', vehicleTypes);
 app.use('/vehicles', vehicles);
 app.use('/bases', bases);
+app.use('/services', services);
+app.use('/routes', routes);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

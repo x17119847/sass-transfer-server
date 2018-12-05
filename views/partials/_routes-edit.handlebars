@@ -1,0 +1,26 @@
+<div class="bg-dark-transparent p-4">
+  <h1>Edit Destination</h1>
+
+  <form class="form" method="POST" action="/routes/edit/{{route.id}}">
+
+    <!-- Route Name -->
+    <div class="form-group">
+      <label class="my-1 mr-2" for="name">Destination Name</label>
+      <input type="text" name="name" id="name" class="form-control" placeholder="Destination Name" value="{{route.name}}">
+    </div>
+
+    <!-- Service -->
+    <div class="form-group">
+      <label class="my-1 mr-2" for="serviceId">Service</label>
+      <select class="custom-select my-1 mr-sm-2" id="serviceId" name="serviceId">
+        <option value="">Please select</option>
+        {{#each services}}
+        <option value="{{id}}" {{isSelected id ../route.serviceId}}>{{name}} - ({{base.name}})</option>
+        {{/each}}
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary my-1 ml-2">Submit</button>
+  </form>
+
+</div>
