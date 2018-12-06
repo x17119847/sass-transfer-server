@@ -28,6 +28,9 @@ html, body {
 }
 
 /* Buttons */
+.btn {
+  min-width: 100px;
+}
 .btn-blue {
   background-color: #3498db;
   color: white;

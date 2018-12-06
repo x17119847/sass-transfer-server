@@ -12,6 +12,15 @@ module.exports = {
     return input == value ? 'selected' : '';
   },
 
+  // Apply Value
+  applyValue: (id, values) => {
+    if(values) {
+      for(val of values) {
+        if(val.paxTypeId == id && val.price >= 0) return val.price;
+      }
+    }
+  },
+
   // Times (for loop)
   times: (n, block) => {
     let accum = '';

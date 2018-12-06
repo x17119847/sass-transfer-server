@@ -64,6 +64,19 @@
       {{> _routes-edit}}
       {{/if}}
 
+      <!-- Route Prices -->
+      {{#if routePricesActive}}
+      {{> _routePrices}}
+      {{/if}}
+
+      {{#if routePricesAddActive}}
+      {{> _routePrices-add}}
+      {{/if}}
+
+      {{#if routePricesEditActive}}
+      {{> _routePrices-edit}}
+      {{/if}}
+
       <!-- Vehicle Types -->
       {{#if vehicleTypesActive}}
       {{> _vehicle-types}}

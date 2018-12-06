@@ -36,7 +36,8 @@ const keys = require('./config/keys');
 const {
   formatDate,
   times,
-  isSelected
+  isSelected,
+  applyValue
 } = require('./helpers/hbs');
 
 // Mongoose Connect
@@ -62,7 +63,8 @@ app.engine('handlebars', exphbs({
   helpers: {
     formatDate,
     times,
-    isSelected
+    isSelected,
+    applyValue
   },
   defaultLayout: 'main'
 }));

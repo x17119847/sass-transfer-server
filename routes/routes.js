@@ -6,6 +6,413 @@ const axios = require('axios');
 const keys = require('../config/keys');
 const async = require('async');
 
+
+// Prices Page
+router.get('/prices/:id',
+  authenticateServer,
+  ensureAuthenticated,
+  (req, res) => {
+
+    // async - perform queries in parallel
+    async.parallel({
+      route: callback => {
+        axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?&access_token=${req.session.serverAccessToken}&filter[include][service]=base`)
+          .then(response => {
+            callback(null, response.data);
+          })
+          .catch(error => console.log(error));
+      },
+      routePrices: callback => {
+        axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}/routePrices?access_token=${req.session.serverAccessToken}&filter[include]=paxType`)
+          .then(response => {
+            callback(null, response.data);
+          })
+          .catch(error => console.log(error));
+      }
+      // more parallel queries can be chained here...
+    }, (error, results) => {
+      if (error) {
+        console.log(error);
+      }
+      else {
+        res.render('dashboard', {
+          dashboardLink: true,
+          routePricesActive: true,
+          companyID: req.session.companyID,
+          route: results.route,
+          routePrices: results.routePrices
+        })
+      }
+    });
+  });
+
+
+// Prices Add Page
+router.get('/prices/:id/add',
+  authenticateServer,
+  ensureAuthenticated,
+  (req, res) => {
+
+    // async - perform queries in parallel
+    async.parallel({
+      route: callback => {
+        axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?&access_token=${req.session.serverAccessToken}&filter[include][service]=base`)
+          .then(response => {
+            callback(null, response.data);
+          })
+          .catch(error => console.log(error));
+      },
+      paxTypes: callback => {
+        axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/paxTypes?&access_token=${req.session.serverAccessToken}`)
+          .then(response => {
+            callback(null, response.data);
+          })
+          .catch(error => console.log(error));
+      }
+      // more parallel queries can be chained here...
+    }, (error, results) => {
+      if (error) {
+        console.log(error);
+      }
+      else {
+        res.render('dashboard', {
+          dashboardLink: true,
+          routePricesAddActive: true,
+          companyID: req.session.companyID,
+          route: results.route,
+          paxTypes: results.paxTypes
+        })
+      }
+    });
+  });
+
+
+// Prices Edit Page
+router.get('/prices/:id/edit',
+  authenticateServer,
+  ensureAuthenticated,
+  (req, res) => {
+
+    // async - perform queries in parallel
+    async.parallel({
+      route: callback => {
+        axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?&access_token=${req.session.serverAccessToken}&filter[include][service]=base`)
+          .then(response => {
+            callback(null, response.data);
+          })
+          .catch(error => console.log(error));
+      },
+      paxPrices: callback => {
+        axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}/routePrices?access_token=${req.session.serverAccessToken}&filter[include]=paxType`)
+          .then(response => {
+            callback(null, response.data);
+          })
+          .catch(error => console.log(error));
+      },
+      paxTypes: callback => {
+        axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/paxTypes?&access_token=${req.session.serverAccessToken}`)
+          .then(response => {
+            callback(null, response.data);
+          })
+          .catch(error => console.log(error));
+      }
+      // more parallel queries can be chained here...
+    }, (error, results) => {
+      if (error) {
+        console.log(error);
+      }
+      else {
+        res.render('dashboard', {
+          dashboardLink: true,
+          routePricesEditActive: true,
+          companyID: req.session.companyID,
+          route: results.route,
+          paxPrices: results.paxPrices,
+          paxTypes: results.paxTypes
+        })
+      }
+    });
+  });
+
+
+// Route Price Create
+router.post('/prices/:id',
+  authenticateServer,
+  ensureAuthenticated,
+  (req, res) => {
+
+    //console.log(req.body);
+    // Set Variables
+    let errors = [];
+    let paxPrices = [];
+    let price;
+
+    // Get all paxTypes to make sure each one was submitted
+    axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/paxTypes?access_token=${req.session.serverAccessToken}`)
+    .then(paxTypes => {      
+      // for each PaxType
+      async.each(paxTypes.data,
+        // function for each paxType
+        (paxType, callback) =>{
+          //console.log(paxType);
+          price = parseInt(req.body[paxType.id]);
+          if(!price > 0) {
+            errors.push({text: `Missing price for Age Group: ${paxType.name}`});
+          }
+          paxPrices.push({"paxTypeId": paxType.id, "price": price})
+          callback();
+        },
+        // after all loops are complete...
+        err => {
+          // All tasks are done now
+          if(err) console.log(err);
+          else {            
+            // If erors, stop and display them, or else send post to update prices.
+            if(errors.length > 0) {              
+              // async - perform queries in parallel
+              async.parallel({
+                route: callback => {
+                  axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?&access_token=${req.session.serverAccessToken}&filter[include][service]=base`)
+                    .then(response => {
+                      callback(null, response.data);
+                    })
+                    .catch(error => console.log(error));
+                },
+                paxTypes: callback => {
+                  axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/paxTypes?&access_token=${req.session.serverAccessToken}`)
+                    .then(response => {
+                      callback(null, response.data);
+                    })
+                    .catch(error => console.log(error));
+                }
+                // more parallel queries can be chained here...
+              }, (error, results) => {
+                if (error) {
+                  console.log(error);
+                }
+                else {
+                  //console.log(paxPrices);
+                  res.render('dashboard', {
+                    dashboardLink: true,
+                    routePricesAddActive: true,
+                    companyID: req.session.companyID,
+                    route: results.route,
+                    paxTypes: results.paxTypes,
+                    paxPrices,
+                    errors
+                  })
+                }
+              });
+            }
+            // Make POST request to insert prices
+            else {
+              // Add each POST request to an array, to be performed asynchronously
+              let asyncTasks = []         
+              paxPrices.forEach(paxPrice => {
+                asyncTasks.push(callback => {
+                  axios.post(`${keys.sassTransferServiceAPIURI}/api/RoutePrices?&access_token=${req.session.serverAccessToken}`, {
+                    paxTypeId: paxPrice.paxTypeId,
+                    price: paxPrice.price,
+                    routeId: req.params.id,
+                    companyId: req.session.companyID
+                  })
+                    .then(response => {
+                      callback(null, response.data);
+                    })
+                    .catch(error => console.log(error));
+                }) 
+              });     
+              
+              // Perform queries in async
+              async.parallel(asyncTasks, (error, results) => {
+                if(error) console.log(error);
+                else {
+                  // Redirect to Route Prices page
+                  // async - perform queries in parallel
+                  async.parallel({
+                    route: callback => {
+                      axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?&access_token=${req.session.serverAccessToken}&filter[include][service]=base`)
+                        .then(response => {
+                          callback(null, response.data);
+                        })
+                        .catch(error => console.log(error));
+                    },
+                    routePrices: callback => {
+                      axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}/routePrices?access_token=${req.session.serverAccessToken}&filter[include]=paxType`)
+                        .then(response => {                                                    
+                          callback(null, response.data);
+                        })
+                        .catch(error => console.log(error));
+                    }
+                    // more parallel queries can be chained here...
+                  }, (error, results) => {
+                    if (error) {
+                      console.log(error);
+                    }
+                    else {
+                      res.render('dashboard', {
+                        dashboardLink: true,
+                        routePricesActive: true,
+                        companyID: req.session.companyID,
+                        route: results.route,
+                        routePrices: results.routePrices
+                      })
+                    }
+                  });
+                }
+              })
+            }
+          }
+        }
+      );
+
+    })
+    .catch(error => console.log(error));
+
+  })
+
+
+// Route Price Update
+router.post('/prices/:id/edit',
+  authenticateServer,
+  ensureAuthenticated,
+  (req, res) => {
+
+    //console.log(req.body);
+    // Set Variables
+    let errors = [];
+    let paxPrices = [];
+    let price;
+
+    // Get all paxTypes to make sure each one was submitted
+    axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/paxTypes?access_token=${req.session.serverAccessToken}`)
+      .then(paxTypes => {
+        // for each PaxType
+        async.each(paxTypes.data,
+          // function for each paxType
+          (paxType, callback) => {
+            //console.log(paxType);
+            price = parseInt(req.body[paxType.id]);
+            if (!price > 0) {
+              errors.push({ text: `Missing price for Age Group: ${paxType.name}` });
+            }
+            paxPrices.push({ "paxTypeId": paxType.id, "price": price })
+            callback();
+          },
+          // after all loops are complete...
+          err => {
+            // All tasks are done now
+            if (err) console.log(err);
+            else {
+              // If erors, stop and display them, or else send post to update prices.
+              if (errors.length > 0) {
+                // async - perform queries in parallel
+                async.parallel({
+                  route: callback => {
+                    axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?&access_token=${req.session.serverAccessToken}&filter[include][service]=base`)
+                      .then(response => {
+                        callback(null, response.data);
+                      })
+                      .catch(error => console.log(error));
+                  },
+                  paxTypes: callback => {
+                    axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/paxTypes?&access_token=${req.session.serverAccessToken}`)
+                      .then(response => {
+                        callback(null, response.data);
+                      })
+                      .catch(error => console.log(error));
+                  }
+                  // more parallel queries can be chained here...
+                }, (error, results) => {
+                  if (error) {
+                    console.log(error);
+                  }
+                  else {
+                    //console.log(paxPrices);
+                    res.render('dashboard', {
+                      dashboardLink: true,
+                      routePricesEditActive: true,
+                      companyID: req.session.companyID,
+                      route: results.route,
+                      paxTypes: results.paxTypes,
+                      paxPrices,
+                      errors
+                    })
+                  }
+                });
+              }
+              // Make POST request to Update prices
+              else {
+
+                axios.delete(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}/routePrices?access_token=${req.session.serverAccessToken}`)
+                .then(() => {
+                  // Add each POST request to an array, to be performed asynchronously
+                  let asyncTasks = []
+                  paxPrices.forEach(paxPrice => {
+                    asyncTasks.push(callback => {
+                      axios.post(`${keys.sassTransferServiceAPIURI}/api/RoutePrices?&access_token=${req.session.serverAccessToken}`, {
+                        paxTypeId: paxPrice.paxTypeId,
+                        price: paxPrice.price,
+                        routeId: req.params.id,
+                        companyId: req.session.companyID
+                      })
+                        .then(response => {
+                          callback(null, response.data);
+                        })
+                        .catch(error => console.log(error));
+                    })
+                  });
+
+                  // Perform queries in async
+                  async.parallel(asyncTasks, (error, results) => {
+                    if (error) console.log(error);
+                    else {
+                      // Redirect to Route Prices page
+                      // async - perform queries in parallel
+                      async.parallel({
+                        route: callback => {
+                          axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?&access_token=${req.session.serverAccessToken}&filter[include][service]=base`)
+                            .then(response => {
+                              callback(null, response.data);
+                            })
+                            .catch(error => console.log(error));
+                        },
+                        routePrices: callback => {
+                          axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}/routePrices?access_token=${req.session.serverAccessToken}&filter[include]=paxType`)
+                            .then(response => {
+                              callback(null, response.data);
+                            })
+                            .catch(error => console.log(error));
+                        }
+                        // more parallel queries can be chained here...
+                      }, (error, results) => {
+                        if (error) {
+                          console.log(error);
+                        }
+                        else {
+                          res.render('dashboard', {
+                            dashboardLink: true,
+                            routePricesActive: true,
+                            companyID: req.session.companyID,
+                            route: results.route,
+                            routePrices: results.routePrices
+                          })
+                        }
+                      });
+                    }
+                  })
+                })
+                .catch(error => console.log(error));
+              }
+            }
+          }
+        );
+
+      })
+      .catch(error => console.log(error));
+
+  })
+
 // Routes Index
 router.get('/',
   authenticateServer,
@@ -53,7 +460,7 @@ router.get('/add',
     .catch(error => console.log(error));
 });
 
-// Services - Edit Page
+// Routes - Edit Page
 router.get('/edit/:id',
   authenticateServer,
   ensureAuthenticated,

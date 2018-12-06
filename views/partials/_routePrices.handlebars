@@ -1,0 +1,28 @@
+
+<div class="container-fluid">
+  <h1>Destination Prices</h1>
+
+  <div class="bg-dark-transparent mb-2 p-3">
+    {{route.name}} / {{route.service.base.name}} - ({{route.service.name}})
+  </div>
+
+  {{#if routePrices}}
+
+    {{#each routePrices}}
+    <div class="bg-dark-transparent mb-2 p-3">
+      {{paxType.name}} - {{price}}
+    </div>
+    {{/each}}
+
+    <a class="btn btn-warning mt-3 mb-3" href="/routes/prices/{{route.id}}/edit">Edit Destination Prices</a>
+
+  {{else}}
+  <div class="">
+    <i class="fa fa-info-circle"></i> You have not yet set up any Prices for this Destination.
+  </div>
+  <a class="btn btn-success mt-3 mb-3" href="/routes/prices/{{route.id}}/add">Add Destination Prices</a>
+  {{/if}}
+
+  
+  
+</div>
