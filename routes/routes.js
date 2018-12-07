@@ -449,7 +449,7 @@ router.get('/add',
   authenticateServer,
   ensureAuthenticated,
   (req, res) => {
-    axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/services?&access_token=${req.session.serverAccessToken}&filter[include]=base`)
+    axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/services?&access_token=${req.session.serverAccessToken}&filter[include][base]=place`)
     .then(response => {      
       res.render('dashboard', {
         dashboardLink: true,
