@@ -32,13 +32,12 @@ const routes = require('./routes/routes');
 // Load Keys
 const keys = require('./config/keys');
 
-// Handlebars Helpers
+// Personally made NPM Package - Handlebars Helpers NCI
 const {
-  formatDate,
   times,
   isSelected,
   applyValue
-} = require('./helpers/hbs');
+} = require('handlebars-helpers-nci');
 
 // Mongoose Connect
 mongoose.connect(keys.mongoURI, {
@@ -61,7 +60,6 @@ app.use(bodyParser.json());
 // Handlebars Middleware
 app.engine('handlebars', exphbs({
   helpers: {
-    formatDate,
     times,
     isSelected,
     applyValue
