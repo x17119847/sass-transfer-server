@@ -1,33 +1,56 @@
 <div class="container-fluid">
   <h1>Edit Destination Prices</h1>
 
-  <div class="bg-dark-transparent mb-2 p-3">
-    {{route.name}} / {{route.service.base.name}} - ({{route.service.name}})
-  </div>
+  <div class="bg-dark-transparent p-4">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Destination Name</th>
+          <th scope="col">Destination Place</th>
+          <th scope="col">Service Name</th>
+          <th scope="col">Base Name</th>
+          <th scope="col">Base Place</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{route.name}}</td>
+          <td>{{route.place.countyName}}</td>
+          <td>{{route.service.name}}</td>
+          <td>{{route.service.base.name}}</td>
+          <td>{{route.service.base.place.countyName}}</td>
+        </tr>
+      </tbody>
+    </table>
 
-  {{#if paxTypes}}
-  <div class="p-3 m-3">
-    <i class="fa fa-info-circle"></i> Enter the price for each Age Group.
-  </div>
-  
-  <form class="form m-3" method="POST" action="/routes/prices/{{route.id}}/edit">
-    <div class="row">
-      {{#each paxTypes}}
-      <div class="bg-dark-transparent m-2 p-3 col-lg-3">
-        <label for="{{id}}">{{name}}: {{age_from}}-{{age_to}} years old.</label>
-        <input type="text" id="{{id}}" name="{{id}}" class="form-control" value="{{applyValue id ../paxPrices}}">
-      </div>
-      {{/each}}
+
+    {{#if paxTypes}}
+    <div class="p-3 mt-3 mb-3 alert alert-warning">
+      <i class="fa fa-info-circle"></i> Enter the price for each Age Group.
     </div>
-    <button type="submit" class="btn btn-primary my-1 ml-2">Submit</button>
-  </form>
-  
-  {{else}}
-  <div class="alert alert-danger mt-4">
-    <i class="fa fa-info-circle"></i> You have to set up the Age Groups before you can add prices.
+
+    <form class="form m-1" method="POST" action="/routes/prices/{{route.id}}/edit">
+      <div class="row">
+        {{#each paxTypes}}
+        <div class="col-lg-3 col-md-6">
+          <div class="bg-dark-transparent p-3">
+            <label for="{{id}}">{{name}}: {{age_from}}-{{age_to}} years old.</label>
+            <input type="text" id="{{id}}" name="{{id}}" class="form-control" value="{{applyValue id ../paxPrices}}">
+          </div>
+        </div>
+        {{/each}}
+      </div>
+      <button type="submit" class="btn btn-success mt-4">Submit</button>
+    </form>
+
+    {{else}}
+    <div class="alert alert-danger mt-4">
+      <i class="fa fa-info-circle"></i> You have to set up the Age Groups before you can add prices.
+    </div>
+    <div class="p-3">
+      <a href="/pax-types/add" class="btn btn-success">Add Age Groups</a>
+    </div>
+    {{/if}}
+
   </div>
-  <div class="p-3">
-    <a href="/pax-types/add" class="btn btn-success">Add Age Groups</a>
-  </div>
-  {{/if}}
 </div>

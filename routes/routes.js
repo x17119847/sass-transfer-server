@@ -16,7 +16,7 @@ router.get('/prices/:id',
     // async - perform queries in parallel
     async.parallel({
       route: callback => {
-        axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?&access_token=${req.session.serverAccessToken}&filter[include][service]=base`)
+        axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?access_token=${req.session.serverAccessToken}&filter[include]=place&filter[include][service][base]=place`)        
           .then(response => {
             callback(null, response.data);
           })
@@ -56,7 +56,7 @@ router.get('/prices/:id/add',
     // async - perform queries in parallel
     async.parallel({
       route: callback => {
-        axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?&access_token=${req.session.serverAccessToken}&filter[include][service]=base`)
+        axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?access_token=${req.session.serverAccessToken}&filter[include]=place&filter[include][service][base]=place`)        
           .then(response => {
             callback(null, response.data);
           })
@@ -96,7 +96,7 @@ router.get('/prices/:id/edit',
     // async - perform queries in parallel
     async.parallel({
       route: callback => {
-        axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?&access_token=${req.session.serverAccessToken}&filter[include][service]=base`)
+        axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?access_token=${req.session.serverAccessToken}&filter[include]=place&filter[include][service][base]=place`)        
           .then(response => {
             callback(null, response.data);
           })
@@ -172,7 +172,7 @@ router.post('/prices/:id',
               // async - perform queries in parallel
               async.parallel({
                 route: callback => {
-                  axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?&access_token=${req.session.serverAccessToken}&filter[include][service]=base`)
+                  axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?access_token=${req.session.serverAccessToken}&filter[include]=place&filter[include][service][base]=place`)        
                     .then(response => {
                       callback(null, response.data);
                     })
@@ -309,7 +309,7 @@ router.post('/prices/:id/edit',
                 // async - perform queries in parallel
                 async.parallel({
                   route: callback => {
-                    axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?&access_token=${req.session.serverAccessToken}&filter[include][service]=base`)
+                    axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?access_token=${req.session.serverAccessToken}&filter[include]=place&filter[include][service][base]=place`)        
                       .then(response => {
                         callback(null, response.data);
                       })

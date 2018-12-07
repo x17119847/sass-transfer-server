@@ -20,13 +20,13 @@ html, body {
 .line {
   width: 100%;
   border-bottom: 1px solid rgba(255,255,255,0.6);
-  margin: 40px 0;
+  margin: 10px 0 20px 0;
 }
 
 
 /* Alerts */
 .alert.alert-danger {
-  background-color: rgba(192,57,43 ,0.2);
+  background-color: rgba(192,57,43 ,0.5);
   color: white;
   border-color: rgba(231,76,60 ,1);
 }
@@ -35,6 +35,12 @@ html, body {
   color: white;
   border-color: rgba(39,174,96 ,1);
 }
+.alert.alert-warning {
+  background-color: rgba(211,84,0 ,0.6);
+  color: white;
+  border-color: black;
+}
+
 
 /* Buttons */
 .btn {
@@ -51,6 +57,7 @@ html, body {
 
 .bg-dark-transparent {
   background-color: rgba(0,0,0,0.7);
+  border-radius: 4px;
 }
 
 

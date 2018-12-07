@@ -41,7 +41,7 @@ router.get('/add',
   authenticateServer,
   ensureAuthenticated,
   (req, res) => {
-    axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/bases?&access_token=${req.session.serverAccessToken}`)
+    axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/bases?&access_token=${req.session.serverAccessToken}&filter[include]=place`)
     .then(response => {      
       res.render('dashboard', {
         dashboardLink: true,
@@ -69,7 +69,7 @@ router.get('/edit/:id',
           .catch(error => console.log(error));
       },
       bases: callback => {
-        axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/bases?&access_token=${req.session.serverAccessToken}`)
+        axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/bases?&access_token=${req.session.serverAccessToken}&filter[include]=place`)
           .then(response => {
             callback(null, response.data);
           })

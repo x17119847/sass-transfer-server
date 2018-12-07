@@ -10,16 +10,36 @@
 
   <a class="btn btn-success mt-3 mb-3" href="/pax-types/add">Add Age Group</a>
   
-  {{#each paxTypes}}
-  <div class="bg-dark-transparent mb-2 p-3">
-    
-    <div class="float-right">
-      <a class="btn btn-warning btn-sm mx-1" href="/pax-types/edit/{{id}}"><i class="fas fa-pencil-alt"></i> Edit</a>
-      <a class="btn btn-danger btn-sm mx-1" href="/pax-types/delete/{{id}}"><i class="fas fa-trash-alt"></i> Delete</a>
-    </div>
-    {{name}}: {{age_from}}-{{age_to}} years old. 
+  <div class="line"></div>
 
+  {{#if paxTypes}}
+  <div class="bg-dark-transparent p-4">
+    <table class="display datatable hover stripe">
+      <thead>
+        <tr>
+          <th scope="col">Age Group</th>
+          <th scope="col">Age From</th>
+          <th scope="col">Age To</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each paxTypes}}
+        <tr>
+          <td>{{name}}</td>
+          <td>{{age_from}}</td>
+          <td>{{age_to}}</td>
+          <td>
+            <div class="float-right">
+              <a class="btn btn-warning btn-sm mx-1" href="/pax-types/edit/{{id}}"><i class="fas fa-pencil-alt"></i> Edit</a>
+              <a class="btn btn-danger btn-sm mx-1" href="/pax-types/delete/{{id}}"><i class="fas fa-trash-alt"></i> Delete</a>
+            </div>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
   </div>
-  {{/each}}
-
+  {{/if}}
+  
 </div>

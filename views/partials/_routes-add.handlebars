@@ -17,12 +17,6 @@
         <input type="hidden" name="countyId" id="countyId" value="{{countyId}}">
         <input type="hidden" name="countyName" id="countyName" value="{{countyName}}">
 
-        <!-- Route Name -->
-        <div class="form-group">
-          <label class="my-1 mr-2" for="name">Destination Name</label>
-          <input type="text" name="name" id="name" class="form-control" placeholder="Destination name" value="{{name}}">
-        </div>
-
         <!-- Service -->
         <div class="form-group">
           <label class="my-1 mr-2" for="serviceId">Service</label>
@@ -32,6 +26,12 @@
             <option value="{{id}}" {{isSelected id ../serviceId}}>{{name}} - ({{base.name}})</option>
             {{/each}}
           </select>
+        </div>
+        
+        <!-- Route Name -->
+        <div class="form-group">
+          <label class="my-1 mr-2" for="name">Destination Name</label>
+          <input type="text" name="name" id="name" class="form-control" placeholder="Destination name" value="{{name}}">
         </div>
 
         <button type="submit" class="btn btn-primary my-1 ml-2">Submit</button>

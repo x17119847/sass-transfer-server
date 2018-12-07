@@ -9,17 +9,35 @@
   {{/if}}
 
   <a class="btn btn-success mt-3 mb-3" href="/bases/add">Add Base</a>
-  
-  {{#each bases}}
-  <div class="bg-dark-transparent mb-2 p-3">
-    
-    <div class="float-right">
-      <a class="btn btn-warning btn-sm mx-1" href="/bases/edit/{{id}}"><i class="fas fa-pencil-alt"></i> Edit</a>
-      <a class="btn btn-danger btn-sm mx-1" href="/bases/delete/{{id}}"><i class="fas fa-trash-alt"></i> Delete</a>
-    </div>
-    {{name}} ({{place.countyName}})
 
+  <div class="line"></div>
+  
+  {{#if bases}}
+  <div class="bg-dark-transparent p-4">
+    <table class="display datatable hover stripe">
+      <thead>
+        <tr>
+          <th scope="col">Base Name</th>
+          <th scope="col">Base Place</th>          
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      {{#each bases}}
+      <tr>
+        <td>{{name}}</td>
+        <td>{{place.countyName}}</td>
+        <td>
+          <div class="float-right">
+            <a class="btn btn-warning btn-sm mx-1" href="/bases/edit/{{id}}"><i class="fas fa-pencil-alt"></i> Edit</a>
+            <a class="btn btn-danger btn-sm mx-1" href="/bases/delete/{{id}}"><i class="fas fa-trash-alt"></i> Delete</a>
+          </div>
+        </td>
+      </tr>
+      {{/each}}
+      </tbody>
+    </table>
   </div>
-  {{/each}}
+  {{/if}}
 
 </div>

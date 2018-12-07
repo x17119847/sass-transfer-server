@@ -1,21 +1,21 @@
-<div class="bg-dark-transparent p-4">
+<div class="bg-dark-transparent p-5">
   <h1>Edit Vehicle Type</h1>  
+
+  <div class="line"></div>
 
   <form class="form-inline" method="POST" action="/vehicle-types/edit/{{vehicleType.id}}">
     
     <!-- Age From -->
     <label class="my-1 mr-2" for="max_pax">Age From </label>
     <select class="custom-select my-1 mr-sm-2" id="max_pax" name="max_pax">
-      {{#select vehicleType.max_pax}}
       {{#times 25}}
-      <option value="{{this}}">{{this}}</option>
+      <option value="{{this}}" {{isSelected this ../vehicleType.max_pax}}>{{this}}</option>
       {{/times}}
-      {{/select}}    
     </select>
 
     <!-- Vehicle Type Name -->
     <label class="my-1 mr-2" for="name">Name of Vehicle Type</label>
-    <input type="text" name="name" id="name" value="{{vehicleType.name}}" placeholder="Name of Vehicle Type">
+    <input type="text" name="name" id="name" value="{{vehicleType.name}}" class="form-control" placeholder="Name of Vehicle Type">
     
     <button type="submit" class="btn btn-primary my-1 ml-2">Submit</button>
   </form>

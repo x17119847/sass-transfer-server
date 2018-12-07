@@ -15,7 +15,7 @@
       <select class="custom-select my-1 mr-sm-2" id="baseId" name="baseId">
         <option value="">Please select</option>
         {{#each bases}}
-        <option value="{{id}}" {{isSelected id ../service.baseId}}>{{name}}</option>
+        <option value="{{id}}" {{isSelected id ../service.baseId}}>{{name}}- {{place.countyName}}</option>
         {{/each}}
       </select>
     </div>

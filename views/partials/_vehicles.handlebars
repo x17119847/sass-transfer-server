@@ -9,17 +9,37 @@
   {{/if}}
 
   <a class="btn btn-success mt-3 mb-3" href="/vehicles/add">Add Vehicle</a>
-  
-  {{#each vehicles}}
-  <div class="bg-dark-transparent mb-2 p-3">
-    
-    <div class="float-right">
-      <a class="btn btn-warning btn-sm mx-1" href="/vehicles/edit/{{id}}"><i class="fas fa-pencil-alt"></i> Edit</a>
-      <a class="btn btn-danger btn-sm mx-1" href="/vehicles/delete/{{id}}"><i class="fas fa-trash-alt"></i> Delete</a>
-    </div>
-    {{name}} ({{vehicleType.name}}) {{#if registration}}Registration: {{registration}}{{/if}}
 
+  <div class="line"></div>
+
+  {{#if vehicles}}
+  <div class="bg-dark-transparent p-4">
+    <table class="display datatable hover stripe">
+      <thead>
+        <tr>
+          <th scope="col">Make and Model</th>
+          <th scope="col">Vehicle Type</th>
+          <th scope="col">Registration</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each vehicles}}
+        <tr>
+          <td>{{name}}</td>
+          <td>{{vehicleType.name}}</td>
+          <td>{{registration}}</td>
+          <td>
+            <div class="float-right">
+              <a class="btn btn-warning btn-sm mx-1" href="/vehicles/edit/{{id}}"><i class="fas fa-pencil-alt"></i> Edit</a>
+              <a class="btn btn-danger btn-sm mx-1" href="/vehicles/delete/{{id}}"><i class="fas fa-trash-alt"></i> Delete</a>
+            </div>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
   </div>
-  {{/each}}
+  {{/if}}
 
 </div>

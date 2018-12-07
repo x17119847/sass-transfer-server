@@ -9,16 +9,32 @@
 
   <a class="btn btn-success mt-3 mb-3" href="/drivers/add">Add Driver</a>
 
-  {{#each drivers}}
-  <div class="bg-dark-transparent mb-2 p-3">
+  <div class="line"></div>
 
-    <div class="float-right">
-      <a class="btn btn-warning btn-sm mx-1" href="/drivers/edit/{{id}}"><i class="fas fa-pencil-alt"></i> Edit</a>
-        <a class="btn btn-danger btn-sm mx-1" href="/drivers/delete/{{id}}"><i class="fas fa-trash-alt"></i> Delete</a>
-    </div>
-    {{name}}
-
+  {{#if drivers}}
+  <div class="bg-dark-transparent p-4">
+    <table class="display datatable hover stripe">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each drivers}}
+        <tr>
+          <td>{{name}}</td>
+          <td>
+            <div class="float-right">
+              <a class="btn btn-warning btn-sm mx-1" href="/drivers/edit/{{id}}"><i class="fas fa-pencil-alt"></i> Edit</a>
+              <a class="btn btn-danger btn-sm mx-1" href="/drivers/delete/{{id}}"><i class="fas fa-trash-alt"></i> Delete</a>
+            </div>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
   </div>
-  {{/each}}
+  {{/if}}
 
 </div>

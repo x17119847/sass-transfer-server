@@ -1,11 +1,19 @@
-<div class="bg-dark-transparent p-4">
+<div class="bg-dark-transparent p-5">
   <h1>Edit Driver</h1>  
 
-  <form class="form-inline" method="POST" action="/drivers/edit/{{driver.id}}">
-    <label class="my-1 mr-2" for="name">Select one </label>
-    <input type="text" name="name" class="form-control mr-2" value="{{driver.name}}">
+  <div class="line"></div>
 
-    <button type="submit" class="btn btn-primary my-1">Submit</button>
-  </form>
+  <div class="row">
+    <div class="col-lg-12">
+      
+      <form class="form-inline" method="POST" action="/drivers/edit/{{driver.id}}">
+        <label class="my-1 mr-2" for="name">Select one </label>
+        <input type="text" name="name" class="form-control mr-2" value="{{driver.name}}">
+
+        <button type="submit" class="btn btn-primary my-1">Submit</button>
+      </form>
+
+    </div>
+  </div>
 
 </div>

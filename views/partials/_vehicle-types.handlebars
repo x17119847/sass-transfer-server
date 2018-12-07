@@ -9,17 +9,35 @@
   {{/if}}
 
   <a class="btn btn-success mt-3 mb-3" href="/vehicle-types/add">Add Vehicle Type</a>
-  
-  {{#each vehicleTypes}}
-  <div class="bg-dark-transparent mb-2 p-3">
-    
-    <div class="float-right">
-      <a class="btn btn-warning btn-sm mx-1" href="/vehicle-types/edit/{{id}}"><i class="fas fa-pencil-alt"></i> Edit</a>
-      <a class="btn btn-danger btn-sm mx-1" href="/vehicle-types/delete/{{id}}"><i class="fas fa-trash-alt"></i> Delete</a>
-    </div>
-    {{name}}, Maximum Passengers {{max_pax}}. 
 
+  <div class="line"></div>
+
+  {{#if vehicleTypes}}
+  <div class="bg-dark-transparent p-4">
+    <table class="display datatable hover stripe">
+      <thead>
+        <tr>
+          <th scope="col">Vehicle Type</th>
+          <th scope="col">Maximum Passengers</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each vehicleTypes}}
+        <tr>
+          <td>{{name}}</td>
+          <td>{{max_pax}}</td>
+          <td>
+            <div class="float-right">
+              <a class="btn btn-warning btn-sm mx-1" href="/vehicle-types/edit/{{id}}"><i class="fas fa-pencil-alt"></i> Edit</a>
+              <a class="btn btn-danger btn-sm mx-1" href="/vehicle-types/delete/{{id}}"><i class="fas fa-trash-alt"></i> Delete</a>
+            </div>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
   </div>
-  {{/each}}
+  {{/if}}
 
 </div>

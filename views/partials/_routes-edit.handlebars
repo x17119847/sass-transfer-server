@@ -17,12 +17,6 @@
         <input type="hidden" name="countyName" id="countyName" value="{{route.place.countyName}}">
         <input type="hidden" name="placeId" id="placeId" value="{{route.placeId}}">
   
-        <!-- Route Name -->
-        <div class="form-group">
-          <label class="my-1 mr-2" for="name">Destination Name</label>
-          <input type="text" name="name" id="name" class="form-control" placeholder="Base name" value="{{route.name}}">
-        </div>
-
         <!-- Service -->
         <div class="form-group">
           <label class="my-1 mr-2" for="serviceId">Service</label>
@@ -33,7 +27,12 @@
             {{/each}}
           </select>
         </div>
-  
+        
+        <!-- Route Name -->
+        <div class="form-group">
+          <label class="my-1 mr-2" for="name">Destination Name</label>
+          <input type="text" name="name" id="name" class="form-control" placeholder="Base name" value="{{route.name}}">
+        </div> 
   
         <!-- Google Place Search -->
   
