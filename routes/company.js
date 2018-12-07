@@ -30,7 +30,6 @@ router.post('/', (req, res) => {
         res.redirect('/dashboard/company')
       })
       .catch(error => {
-        console.log('ERROR')
         console.log(error);
       })
   

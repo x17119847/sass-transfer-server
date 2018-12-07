@@ -136,7 +136,6 @@ router.post('/',
           res.redirect('/services')
         })
         .catch(error => {
-          console.log('ERROR')
           console.log(error);
         })
     
@@ -208,7 +207,6 @@ router.post('/edit/:id',
           res.redirect('/services')
         })
         .catch(error => {
-          console.log('ERROR')
           console.log(error);
         });
     }
@@ -231,7 +229,6 @@ router.get('/delete/:id',
         res.redirect('/services')
       })
       .catch(error => {
-        console.log('ERROR')
         console.log(error);
       })
 })

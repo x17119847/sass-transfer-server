@@ -32,7 +32,6 @@ router.get('/',
         console.log(error);
       }
       else {        
-        console.log(results);
         res.render('dashboard', {
           dashboardLink: true,
           vehiclesActive: true,
@@ -51,7 +50,6 @@ router.get('/add',
   (req, res) => {
     axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/vehicleTypes?access_token=${req.session.serverAccessToken}`)
     .then(response => {
-      console.log(response.data)
       res.render('dashboard', {
         dashboardLink: true,
         vehiclesAddActive: true,
@@ -149,7 +147,6 @@ router.post('/',
           res.redirect('/vehicles')
         })
         .catch(error => {
-          console.log('ERROR')
           console.log(error);
         })
     
@@ -223,7 +220,6 @@ router.post('/edit/:id',
           res.redirect('/vehicles')
         })
         .catch(error => {
-          console.log('ERROR')
           console.log(error);
         })
 
@@ -242,12 +238,10 @@ router.get('/delete/:id',
       ])
     })
       .then(response => {
-        console.log(response.data)
         req.flash('success_msg', 'Vehicle deleted.')
         res.redirect('/vehicles')
       })
       .catch(error => {
-        console.log('ERROR')
         console.log(error);
       })
 })

@@ -35,11 +35,15 @@ $(function() {
     $(this).addClass('land-selected');
   });
   
-  $('.datatable').DataTable();
-
-  // Add tooltip to counties to display county name on hover.
-  //$(function () {
-    //$('.land').tooltip()
-  //})
+  $('.datatable').DataTable({
+    dom: 'Bfrtip',
+    buttons: [
+      {
+        extend: 'pdfHtml5',
+        orientation: 'landscape',
+        pageSize: 'LEGAL'
+      }
+    ]
+  });
 
 })

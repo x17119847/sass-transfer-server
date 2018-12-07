@@ -92,10 +92,8 @@ router.post('/',
           res.redirect('/vehicle-types')
         })
         .catch(error => {
-          console.log('ERROR')
           console.log(error);
         })
-    
     }
 })
 
@@ -142,7 +140,6 @@ router.post('/edit/:id',
           res.redirect('/vehicle-types')
         })
         .catch(error => {
-          console.log('ERROR')
           console.log(error);
         })
 
@@ -161,12 +158,10 @@ router.get('/delete/:id',
       ])
     })
       .then(response => {
-        console.log(response.data)
         req.flash('success_msg', 'Vehicle Type deleted.')
         res.redirect('/vehicle-types')
       })
       .catch(error => {
-        console.log('ERROR')
         console.log(error);
       })
 })

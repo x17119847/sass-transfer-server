@@ -422,8 +422,7 @@ router.get('/',
     async.parallel({
       routes: callback => {
         axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/routes?access_token=${req.session.serverAccessToken}&filter[include]=place&filter[include][service][base]=place`)
-        .then(response => {
-          console.log(response.data)
+        .then(response => {          
           callback(null, response.data);
         })
         .catch(error => console.log(error));          
@@ -546,11 +545,8 @@ router.post('/',
       // Check if place already exists, if not, insert.
       axios.get(`${keys.sassTransferServiceAPIURI}/api/Places?filter={"where":{"countyId":"${countyId}"}}&access_token=${req.session.serverAccessToken}`)
         .then(response => {
-          console.log('has place')
-          console.log(response.data)
           let place = response.data;
           if (!place.length > 0) {
-            console.log('No place')
             axios.post(`${keys.sassTransferServiceAPIURI}/api/Places?access_token=${req.session.serverAccessToken}`, {
               countyId,
               countyName,
@@ -658,11 +654,8 @@ router.post('/edit/:id',
       // Check if place already exists, if not, insert.
       axios.get(`${keys.sassTransferServiceAPIURI}/api/Places?filter={"where":{"countyId":"${countyId}"}}&access_token=${req.session.serverAccessToken}`)
         .then(response => {
-          console.log('has place')
-          console.log(response.data)
           let place = response.data;
           if (!place.length > 0) {
-            console.log('No place')
             axios.post(`${keys.sassTransferServiceAPIURI}/api/Places?access_token=${req.session.serverAccessToken}`, {
               countyId,
               countyName,
@@ -722,7 +715,6 @@ router.get('/delete/:id',
         res.redirect('/routes')
       })
       .catch(error => {
-        console.log('ERROR')
         console.log(error);
       })
 })

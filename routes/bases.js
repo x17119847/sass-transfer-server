@@ -115,11 +115,8 @@ router.post('/',
       // Check if place already exists, if not, insert.
       axios.get(`${keys.sassTransferServiceAPIURI}/api/Places?filter={"where":{"countyId":"${countyId}"}}&access_token=${req.session.serverAccessToken}`)
       .then(response => {
-        console.log('has place')
-        console.log(response.data)
         let place = response.data;
         if(!place.length > 0) {
-          console.log('No place')
           axios.post(`${keys.sassTransferServiceAPIURI}/api/Places?access_token=${req.session.serverAccessToken}`, {
             countyId,
             countyName,
@@ -214,11 +211,8 @@ router.post('/edit/:id',
       // Check if place already exists, if not, insert.
       axios.get(`${keys.sassTransferServiceAPIURI}/api/Places?filter={"where":{"countyId":"${countyId}"}}&access_token=${req.session.serverAccessToken}`)
         .then(response => {
-          console.log('has place')
-          console.log(response.data)
           let place = response.data;
           if (!place.length > 0) {
-            console.log('No place')
             axios.post(`${keys.sassTransferServiceAPIURI}/api/Places?access_token=${req.session.serverAccessToken}`, {
               countyId,
               countyName,
@@ -272,12 +266,10 @@ router.get('/delete/:id',
       ])
     })
       .then(response => {
-        console.log(response.data)
         req.flash('success_msg', 'Base deleted.')
         res.redirect('/bases')
       })
       .catch(error => {
-        console.log('ERROR')
         console.log(error);
       })
 })

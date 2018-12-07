@@ -97,7 +97,6 @@ router.post('/',
           res.redirect('/pax-types')
         })
         .catch(error => {
-          console.log('ERROR')
           console.log(error);
         })
     
@@ -125,7 +124,6 @@ router.post('/edit/:id',
     if (age_from >= age_to) {
       errors.push({ text: 'Age From must be less than Age To' })
     }
-    console.log(errors, age_from, age_to, name);
 
     if (errors.length > 0) {      
       axios.get(`${keys.sassTransferServiceAPIURI}/api/PaxTypes/${req.params.id}?&access_token=${req.session.serverAccessToken}`)
@@ -153,7 +151,6 @@ router.post('/edit/:id',
           res.redirect('/pax-types')
         })
         .catch(error => {
-          console.log('ERROR')
           console.log(error);
         })
 
@@ -177,7 +174,6 @@ router.get('/delete/:id',
         res.redirect('/pax-types')
       })
       .catch(error => {
-        console.log('ERROR')
         console.log(error);
       })
 })

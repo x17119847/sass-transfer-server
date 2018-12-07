@@ -16,16 +16,6 @@ router.get('/google/callback',
     res.redirect('/dashboard/company');
 })
 
-// Verify Authentication
-router.get('/verify', (req, res) => {
-  if(req.user) {
-    console.log(req.user);
-  }
-  else {
-    console.log('Not Auth');
-  }
-})
-
 // Logout Route
 router.get('/logout', (req, res) => {
   req.logout();

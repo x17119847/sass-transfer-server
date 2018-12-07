@@ -18,22 +18,25 @@ module.exports = {
     let loginURL = `${keys.sassTransferServiceAPIURI}/api/Users/login`;
 
     if(req.session.serverUserID == undefined || req.session.serverAccessToken == undefined) {
-      console.log('NO SESSION VARS')
+
       axios.post(loginURL, {
         email: keys.sassTransferServiceAPIEmail,
         password: keys.sassTransferServiceAPIPassword
       })
-      .then(function (response) {
+      .then(response => {
         req.session.serverAccessToken = response.data.id;
         req.session.serverUserID = response.data.userId;
         next();
       })
-      .catch(function (error) {
-        res.send(`Could not authenticate on API Server: ${error}, ${loginURL}`)
+      .catch(error => {
+        res.render('index/errorPage', {
+          error: error
+        })
+        //res.send(`Could not authenticate on API Server: ${error}, ${loginURL}`)
       });
     }
     else {
-      console.log('have session vars')
+
       // Check if token is valid
       let checkTokenURL = `${keys.sassTransferServiceAPIURI}/api/Users/${req.session.serverUserID}?access_token=${req.session.serverAccessToken}`;
 
@@ -47,13 +50,16 @@ module.exports = {
           email: keys.sassTransferServiceAPIEmail,
           password: keys.sassTransferServiceAPIPassword
         })
-        .then(function (response) {            
+        .then(response => {            
           req.session.serverAccessToken = response.data.id;
           req.session.serverUserID = response.data.userId;
           next();
         })
-        .catch(function (error) {
-          res.send(`Could not authenticate on API Server: ${error}, ${checkTokenURL}, ${loginURL}`)
+        .catch(error => {
+          res.render('index/errorPage',{
+            error: error
+          })          
+          //res.send(`Could not authenticate on API Server: ${error}, ${checkTokenURL}, ${loginURL}`)
         });
 
       });
@@ -84,7 +90,6 @@ module.exports = {
             });
         } 
         else {           
-          console.log(response.data[0].id)
           req.session.companyID = response.data[0].id;                      
           next();
         }

@@ -40,7 +40,7 @@ router.get('/company',
         company: response.data
       })
     })
-    .catch(error => console.log('error getting company', `${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}access_token=${req.session.serverAccessToken}`));
+    .catch(error => console.log(error));
 });
 
 // Bookings

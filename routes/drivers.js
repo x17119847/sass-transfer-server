@@ -80,7 +80,6 @@ router.post('/',
           res.redirect('/drivers')
         })
         .catch(error => {
-          console.log('ERROR')
           console.log(error);
         })
 
@@ -110,7 +109,6 @@ router.post('/edit/:id',
           res.redirect('/drivers')
         })
         .catch(error => {
-          console.log('ERROR')
           console.log(error);
         })
 
@@ -129,12 +127,10 @@ router.get('/delete/:id',
       ])
     })
       .then(response => {
-        console.log(response.data)
         req.flash('success_msg', 'Driver deleted.')
         res.redirect('/drivers')
       })
       .catch(error => {
-        console.log('ERROR')
         console.log(error);
       })
   })
