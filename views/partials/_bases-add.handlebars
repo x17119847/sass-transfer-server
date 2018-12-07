@@ -1,10 +1,22 @@
+
 <div class="bg-dark-transparent p-4">
   <h1>Add Base</h1>
   <p><i class="fas fa-info-circle"></i> Example: A place where you provide transport services from, ie Airport, City Center, etc.</p>
+  
+  <div class="line"></div>
 
   <div class="row">
-    <div class="col-lg-6 col-md-12">
+
+    <div class="col-md-6 text-center">
+      <h2 id="selectedCounty" class="alert alert-danger">{{#if countyName}}{{countyName}}{{else}}Select a County{{/if}}</h2>
+      {{> _ireland}}
+    </div>
+
+    <div class="col-md-6">
       <form class="form" method="POST" action="/bases">
+        
+        <input type="hidden" name="countyId" id="countyId" value="{{countyId}}">
+        <input type="hidden" name="countyName" id="countyName" value="{{countyName}}">
 
         <!-- Base Name -->
         <div class="form-group">
@@ -12,12 +24,14 @@
           <input type="text" name="name" id="name" class="form-control" placeholder="Base name" value="{{name}}">
         </div>
 
+        
         <!-- Google Place Search -->
 
         <button type="submit" class="btn btn-primary my-1 ml-2">Submit</button>
       </form>
 
     </div>
+
   </div>
     
 </div>

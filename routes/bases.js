@@ -57,7 +57,7 @@ router.get('/edit/:id',
     // async - perform queries in parallel
     async.parallel({
       base: callback => {
-        axios.get(`${keys.sassTransferServiceAPIURI}/api/Bases/${req.params.id}?&access_token=${req.session.serverAccessToken}`)
+        axios.get(`${keys.sassTransferServiceAPIURI}/api/Bases/${req.params.id}?&access_token=${req.session.serverAccessToken}&filter[include]=place`)
           .then(response => {
             callback(null, response.data);
           })
@@ -87,8 +87,14 @@ router.post('/',
 
     // Set Variables
     let name = req.body.name.trim();
+    let countyId = req.body.countyId;
+    let countyName = req.body.countyName;
+    let countryCode = 'IE';
     let errors = [];
-    
+
+    if (!countyId) {
+      errors.push({ text: 'Please select a County.' })
+    }
     if (!name.length > 0) {
       errors.push({text:'Base Name cannot be blank.'})
     }
@@ -96,6 +102,8 @@ router.post('/',
       res.render('dashboard', {
         errors,
         name,
+        countyId,
+        countyName,
         dashboardLink: true,
         basesAddActive: true,
         companyID: req.session.companyID
@@ -103,18 +111,52 @@ router.post('/',
     }
     else {
       // Send Post Request to API Server
-      axios.post(`${keys.sassTransferServiceAPIURI}/api/Bases?&access_token=${req.session.serverAccessToken}`, {
-        name,
-        companyId: req.session.companyID
+
+      // Check if place already exists, if not, insert.
+      axios.get(`${keys.sassTransferServiceAPIURI}/api/Places?filter={"where":{"countyId":"${countyId}"}}&access_token=${req.session.serverAccessToken}`)
+      .then(response => {
+        console.log('has place')
+        console.log(response.data)
+        let place = response.data;
+        if(!place.length > 0) {
+          console.log('No place')
+          axios.post(`${keys.sassTransferServiceAPIURI}/api/Places?access_token=${req.session.serverAccessToken}`, {
+            countyId,
+            countyName,
+            countryCode
+          })
+          .then(response => {            
+            let placeId = response.data.id;
+            axios.post(`${keys.sassTransferServiceAPIURI}/api/Bases?&access_token=${req.session.serverAccessToken}`, {
+              name,
+              companyId: req.session.companyID,
+              placeId
+            })
+              .then(response => {
+                req.flash('success_msg', 'Base created.')
+                res.redirect('/bases')
+              })
+              .catch(error => console.log(error));
+          })
+          .catch();
+        }
+        else {          
+          let placeId = place[0].id;
+          axios.post(`${keys.sassTransferServiceAPIURI}/api/Bases?&access_token=${req.session.serverAccessToken}`, {
+            name,
+            companyId: req.session.companyID,
+            placeId
+          })
+            .then(response => {
+              req.flash('success_msg', 'Base created.')
+              res.redirect('/bases')
+            })
+            .catch(error => console.log(error));
+        }
       })
-        .then(response => {      
-          req.flash('success_msg','Base created.')
-          res.redirect('/bases')
-        })
-        .catch(error => {
-          console.log('ERROR')
-          console.log(error);
-        })
+      .catch(error => {
+        console.log(error)
+      });
     
     }
 })
@@ -127,8 +169,9 @@ router.post('/edit/:id',
 
     // Set Variables
     let name = req.body.name.trim();
+    let placeId = req.body.placeId;
     let errors = [];
-
+    
     if (!name.length > 0) {
       errors.push({ text: 'Base Name cannot be blank.' })
     }
@@ -138,7 +181,7 @@ router.post('/edit/:id',
       // async - perform queries in parallel
       async.parallel({
         base: callback => {
-          axios.get(`${keys.sassTransferServiceAPIURI}/api/Bases/${req.params.id}?&access_token=${req.session.serverAccessToken}`)
+          axios.get(`${keys.sassTransferServiceAPIURI}/api/Bases/${req.params.id}?&access_token=${req.session.serverAccessToken}&filter[include]=place`)
             .then(response => {
               callback(null, response.data);
             })
@@ -155,7 +198,8 @@ router.post('/edit/:id',
             basesEditActive: true,
             companyID: req.session.companyID,
             base: results.base,            
-            errors
+            errors,
+            countyId
           })
         }
       });
@@ -165,7 +209,8 @@ router.post('/edit/:id',
       // Send Post Request to API Server
       axios.put(`${keys.sassTransferServiceAPIURI}/api/Bases/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {  
         name,
-        companyId: req.session.companyID
+        companyId: req.session.companyID,
+        placeId
       })
         .then(response => {
           req.flash('success_msg', 'Base updated.')

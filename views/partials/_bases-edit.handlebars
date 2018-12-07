@@ -1,17 +1,36 @@
 <div class="bg-dark-transparent p-4">
   <h1>Edit Base</h1>
+  
+  <div class="line"></div>
 
-  <form class="form" method="POST" action="/bases/edit/{{base.id}}">
+  <div class="row">
 
-    <!-- Base Name -->
-    <div class="form-group">
-      <label class="my-1 mr-2" for="name">Base Name</label>
-      <input type="text" name="name" id="name" class="form-control" placeholder="Base Name" value="{{base.name}}">
+    <div class="col-md-6 text-center">
+      <h2 id="selectedCounty" class="alert alert-success">{{base.place.countyName}}</h2>
+      {{> _ireland}}
     </div>
 
-    <!-- Google Place Search -->
+    <div class="col-md-6">
+      <form class="form" method="POST" action="/bases/edit/{{base.id}}">
 
-    <button type="submit" class="btn btn-primary my-1 ml-2">Submit</button>
-  </form>
+        <input type="hidden" name="countyId" id="countyId" value="{{base.place.countyId}}">
+        <input type="hidden" name="countyName" id="countyName" value="{{base.place.countyName}}">
+        <input type="hidden" name="placeId" id="placeId" value="{{base.placeId}}">
+
+        <!-- Base Name -->
+        <div class="form-group">
+          <label class="my-1 mr-2" for="name">Base Name</label>
+          <input type="text" name="name" id="name" class="form-control" placeholder="Base name" value="{{base.name}}">
+        </div>
+
+
+        <!-- Google Place Search -->
+
+        <button type="submit" class="btn btn-primary my-1 ml-2">Submit</button>
+      </form>
+
+    </div>
+
+  </div>
 
 </div>
