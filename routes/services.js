@@ -14,7 +14,7 @@ router.get('/',
     // async - perform queries in parallel
     async.parallel({
       services: callback => {
-        axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/services?access_token=${req.session.serverAccessToken}&filter[include]=base`)
+        axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/services?access_token=${req.session.serverAccessToken}&filter[include][base]=place`)
         .then(response => {
           callback(null, response.data);
         })

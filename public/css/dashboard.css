@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Niramit:400,500,900');
+@import url('https://fonts.googleapis.com/css?family=Faster+One');
 html, body {
    font-family: "Niramit", sans-serif;
    width: 100%;
@@ -18,7 +19,7 @@ html, body {
 /* Line */
 .line {
   width: 100%;
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid rgba(255,255,255,0.6);
   margin: 40px 0;
 }
 
@@ -81,7 +82,8 @@ footer a:hover {
   bottom: 0;
   left: 0;
   z-index: 100; /* Behind the navbar */
-  padding: 48px 0 0; /* Height of navbar */
+  padding: 68px 0 0; /* Height of navbar */
+  padding-left: 2rem;
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
 }
 
@@ -126,12 +128,13 @@ footer a:hover {
  */
 
 .navbar-brand {
+  font-family: 'Faster One', sans-serif;
   padding-top: .75rem;
   padding-bottom: .75rem;
-  font-size: 1.8rem;
+  padding-left: 3rem;
+  font-size: 2rem;
   text-transform: uppercase;
-  color: rgba(241,196,15 ,1) !important;
-  text-shadow: 2px 2px rgba(241,196,15 ,0.5);
+  color: rgba(52,152,219 ,1) !important;
   background-color: rgba(0, 0, 0, .25);
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
 }

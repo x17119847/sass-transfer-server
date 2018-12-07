@@ -170,6 +170,9 @@ router.post('/edit/:id',
     // Set Variables
     let name = req.body.name.trim();
     let placeId = req.body.placeId;
+    let countyId = req.body.countyId;
+    let countyName = req.body.countyName;
+    let countryCode = 'IE';
     let errors = [];
     
     if (!name.length > 0) {
@@ -206,20 +209,53 @@ router.post('/edit/:id',
 
     }
     else {
+      
       // Send Post Request to API Server
-      axios.put(`${keys.sassTransferServiceAPIURI}/api/Bases/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {  
-        name,
-        companyId: req.session.companyID,
-        placeId
-      })
+      // Check if place already exists, if not, insert.
+      axios.get(`${keys.sassTransferServiceAPIURI}/api/Places?filter={"where":{"countyId":"${countyId}"}}&access_token=${req.session.serverAccessToken}`)
         .then(response => {
-          req.flash('success_msg', 'Base updated.')
-          res.redirect('/bases')
+          console.log('has place')
+          console.log(response.data)
+          let place = response.data;
+          if (!place.length > 0) {
+            console.log('No place')
+            axios.post(`${keys.sassTransferServiceAPIURI}/api/Places?access_token=${req.session.serverAccessToken}`, {
+              countyId,
+              countyName,
+              countryCode
+            })
+              .then(response => {
+                let placeId = response.data.id;
+                axios.put(`${keys.sassTransferServiceAPIURI}/api/Bases/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {
+                  name,
+                  companyId: req.session.companyID,
+                  placeId
+                })
+                  .then(response => {
+                    req.flash('success_msg', 'Base updated.')
+                    res.redirect('/bases')
+                  })
+                  .catch(error => console.log(error));
+              })
+              .catch();
+          }
+          else {
+            let placeId = place[0].id;
+            axios.put(`${keys.sassTransferServiceAPIURI}/api/Bases/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {
+              name,
+              companyId: req.session.companyID,
+              placeId
+            })
+              .then(response => {
+                req.flash('success_msg', 'Base created.')
+                res.redirect('/bases')
+              })
+              .catch(error => console.log(error));
+          }
         })
         .catch(error => {
-          console.log('ERROR')
-          console.log(error);
-        })
+          console.log(error)
+        });
 
     }
   })

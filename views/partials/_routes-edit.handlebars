@@ -1,26 +1,72 @@
-<div class="bg-dark-transparent p-4">
+<div class="bg-dark-transparent p-5">
   <h1>Edit Destination</h1>
 
-  <form class="form" method="POST" action="/routes/edit/{{route.id}}">
-
-    <!-- Route Name -->
-    <div class="form-group">
-      <label class="my-1 mr-2" for="name">Destination Name</label>
-      <input type="text" name="name" id="name" class="form-control" placeholder="Destination Name" value="{{route.name}}">
+  <div class="line"></div>
+  
+  <div class="row">
+  
+    <div class="col-md-6 text-center">
+      <h2 id="selectedCounty" class="alert alert-success">{{route.place.countyName}}</h2>
+      {{> _ireland}}
     </div>
+  
+    <div class="col-md-6">
+      <form class="form" method="POST" action="/routes/edit/{{route.id}}">
+  
+        <input type="hidden" name="countyId" id="countyId" value="{{route.place.countyId}}">
+        <input type="hidden" name="countyName" id="countyName" value="{{route.place.countyName}}">
+        <input type="hidden" name="placeId" id="placeId" value="{{route.placeId}}">
+  
+        <!-- Route Name -->
+        <div class="form-group">
+          <label class="my-1 mr-2" for="name">Destination Name</label>
+          <input type="text" name="name" id="name" class="form-control" placeholder="Base name" value="{{route.name}}">
+        </div>
 
-    <!-- Service -->
-    <div class="form-group">
-      <label class="my-1 mr-2" for="serviceId">Service</label>
-      <select class="custom-select my-1 mr-sm-2" id="serviceId" name="serviceId">
-        <option value="">Please select</option>
-        {{#each services}}
-        <option value="{{id}}" {{isSelected id ../route.serviceId}}>{{name}} - ({{base.name}})</option>
-        {{/each}}
-      </select>
+        <!-- Service -->
+        <div class="form-group">
+          <label class="my-1 mr-2" for="serviceId">Service</label>
+          <select class="custom-select my-1 mr-sm-2" id="serviceId" name="serviceId">
+            <option value="">Please select</option>
+            {{#each services}}
+            <option value="{{id}}" {{isSelected id ../route.serviceId}}>{{name}} - ({{base.name}})</option>
+            {{/each}}
+          </select>
+        </div>
+  
+  
+        <!-- Google Place Search -->
+  
+        <button type="submit" class="btn btn-primary my-1 ml-2">Submit</button>
+      </form>
+  
     </div>
-
-    <button type="submit" class="btn btn-primary my-1 ml-2">Submit</button>
-  </form>
-
+  
+  </div>
+  
 </div>
+
+
+
+
+<form class="form" method="POST" action="/routes/edit/{{route.id}}">
+
+  <!-- Route Name -->
+  <div class="form-group">
+    <label class="my-1 mr-2" for="name">Destination Name</label>
+    <input type="text" name="name" id="name" class="form-control" placeholder="Destination Name" value="{{route.name}}">
+  </div>
+
+  <!-- Service -->
+  <div class="form-group">
+    <label class="my-1 mr-2" for="serviceId">Service</label>
+    <select class="custom-select my-1 mr-sm-2" id="serviceId" name="serviceId">
+      <option value="">Please select</option>
+      {{#each services}}
+      <option value="{{id}}" {{isSelected id ../route.serviceId}}>{{name}} - ({{base.name}})</option>
+      {{/each}}
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-primary my-1 ml-2">Submit</button>
+</form>

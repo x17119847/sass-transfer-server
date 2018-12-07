@@ -421,8 +421,9 @@ router.get('/',
     // async - perform queries in parallel
     async.parallel({
       routes: callback => {
-        axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/routes?access_token=${req.session.serverAccessToken}&filter[include][service]=base`)
+        axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/routes?access_token=${req.session.serverAccessToken}&filter[include]=place&filter[include][service][base]=place`)
         .then(response => {
+          console.log(response.data)
           callback(null, response.data);
         })
         .catch(error => console.log(error));          
@@ -469,7 +470,7 @@ router.get('/edit/:id',
     // async - perform queries in parallel
     async.parallel({
       route: callback => {
-        axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?&access_token=${req.session.serverAccessToken}`)
+        axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?&access_token=${req.session.serverAccessToken}&filter[include]=place`)
           .then(response => {
             callback(null, response.data);
           })
@@ -508,8 +509,14 @@ router.post('/',
     // Set Variables
     let name = req.body.name.trim();
     let serviceId = req.body.serviceId;
+    let countyId = req.body.countyId;
+    let countyName = req.body.countyName;
+    let countryCode = 'IE';
     let errors = [];
     
+    if (!countyId) {
+      errors.push({ text: 'Please select a County.' })
+    }
     if (!name.length > 0) {
       errors.push({text:'Destination Name cannot be blank.'});
     }
@@ -523,6 +530,8 @@ router.post('/',
           errors,
           name,
           serviceId,
+          countyId,
+          countyName,
           services: response.data,
           dashboardLink: true,
           routesAddActive: true,
@@ -533,20 +542,54 @@ router.post('/',
     }
     else {
       // Send Post Request to API Server
-      axios.post(`${keys.sassTransferServiceAPIURI}/api/Routes?&access_token=${req.session.serverAccessToken}`, {
-        name,
-        serviceId,
-        companyId: req.session.companyID
-      })
-        .then(response => {      
-          req.flash('success_msg','Destination created.')
-          res.redirect('/routes')
+
+      // Check if place already exists, if not, insert.
+      axios.get(`${keys.sassTransferServiceAPIURI}/api/Places?filter={"where":{"countyId":"${countyId}"}}&access_token=${req.session.serverAccessToken}`)
+        .then(response => {
+          console.log('has place')
+          console.log(response.data)
+          let place = response.data;
+          if (!place.length > 0) {
+            console.log('No place')
+            axios.post(`${keys.sassTransferServiceAPIURI}/api/Places?access_token=${req.session.serverAccessToken}`, {
+              countyId,
+              countyName,
+              countryCode
+            })
+              .then(response => {
+                let placeId = response.data.id;
+                axios.post(`${keys.sassTransferServiceAPIURI}/api/Routes?&access_token=${req.session.serverAccessToken}`, {
+                  name,
+                  companyId: req.session.companyID,
+                  placeId,
+                  serviceId
+                })
+                  .then(response => {
+                    req.flash('success_msg', 'Destination created.')
+                    res.redirect('/routes')
+                  })
+                  .catch(error => console.log(error));
+              })
+              .catch();
+          }
+          else {
+            let placeId = place[0].id;
+            axios.post(`${keys.sassTransferServiceAPIURI}/api/Routes?&access_token=${req.session.serverAccessToken}`, {
+              name,
+              companyId: req.session.companyID,
+              placeId,
+              serviceId
+            })
+              .then(response => {
+                req.flash('success_msg', 'Destination created.')
+                res.redirect('/routes')
+              })
+              .catch(error => console.log(error));
+          }
         })
         .catch(error => {
-          console.log('ERROR')
-          console.log(error);
-        })
-    
+          console.log(error)
+        });    
     }
 })
 
@@ -559,6 +602,10 @@ router.post('/edit/:id',
     // Set Variables
     let name = req.body.name.trim();
     let serviceId = req.body.serviceId;
+    let placeId = req.body.placeId;
+    let countyId = req.body.countyId;
+    let countyName = req.body.countyName;
+    let countryCode = 'IE';
     let errors = [];
 
     if (!name.length > 0) {
@@ -572,7 +619,7 @@ router.post('/edit/:id',
       // async - perform queries in parallel
       async.parallel({
         route: callback => {
-          axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?&access_token=${req.session.serverAccessToken}`)
+          axios.get(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?&access_token=${req.session.serverAccessToken}&filter[include]=place`)
             .then(response => {
               callback(null, response.data);
             })
@@ -597,7 +644,10 @@ router.post('/edit/:id',
             companyID: req.session.companyID,
             services: results.services,
             route: results.route,            
-            errors
+            errors,
+            placeId,
+            countyId,
+            serviceId
           });
         }
       });
@@ -605,18 +655,52 @@ router.post('/edit/:id',
     }
     else {
       // Send Post Request to API Server
-      axios.put(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {  
-        name,
-        serviceId,
-        companyId: req.session.companyID
-      })
+      // Check if place already exists, if not, insert.
+      axios.get(`${keys.sassTransferServiceAPIURI}/api/Places?filter={"where":{"countyId":"${countyId}"}}&access_token=${req.session.serverAccessToken}`)
         .then(response => {
-          req.flash('success_msg', 'Destination updated.')
-          res.redirect('/routes')
+          console.log('has place')
+          console.log(response.data)
+          let place = response.data;
+          if (!place.length > 0) {
+            console.log('No place')
+            axios.post(`${keys.sassTransferServiceAPIURI}/api/Places?access_token=${req.session.serverAccessToken}`, {
+              countyId,
+              countyName,
+              countryCode
+            })
+              .then(response => {
+                let placeId = response.data.id;
+                axios.put(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {
+                  name,
+                  companyId: req.session.companyID,
+                  placeId,
+                  serviceId
+                })
+                  .then(response => {
+                    req.flash('success_msg', 'Destination updated.')
+                    res.redirect('/routes')
+                  })
+                  .catch(error => console.log(error));
+              })
+              .catch();
+          }
+          else {
+            let placeId = place[0].id;
+            axios.put(`${keys.sassTransferServiceAPIURI}/api/Routes/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {
+              name,
+              companyId: req.session.companyID,
+              placeId,
+              serviceId
+            })
+              .then(response => {
+                req.flash('success_msg', 'Destination created.')
+                res.redirect('/routes')
+              })
+              .catch(error => console.log(error));
+          }
         })
         .catch(error => {
-          console.log('ERROR')
-          console.log(error);
+          console.log(error)
         });
     }
   })

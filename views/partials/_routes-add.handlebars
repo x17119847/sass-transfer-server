@@ -1,10 +1,21 @@
-<div class="bg-dark-transparent p-4">
+<div class="bg-dark-transparent p-5">
   <h1>Add Destination</h1>
   <p><i class="fas fa-info-circle"></i> A Destination to a Service you provide. For example, you might have a Service called "Airport Runs", with Base in the Dublin Airport, and the Destination is Galway.</p>
 
+  <div class="line"></div>
+
   <div class="row">
+
+    <div class="col-md-6 text-center">
+      <h2 id="selectedCounty" class="alert alert-danger">{{#if countyName}}{{countyName}}{{else}}Select a County{{/if}}</h2>
+      {{> _ireland}}
+    </div>
+    
     <div class="col-lg-6 col-md-12">
       <form class="form" method="POST" action="/routes">
+
+        <input type="hidden" name="countyId" id="countyId" value="{{countyId}}">
+        <input type="hidden" name="countyName" id="countyName" value="{{countyName}}">
 
         <!-- Route Name -->
         <div class="form-group">
