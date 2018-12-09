@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const { ensureAuthenticated, authenticateServer } = require('../helpers/auth');
-const mongoose = require('mongoose');
 const axios = require('axios');
 const keys = require('../config/keys');
 
@@ -19,7 +18,12 @@ router.get('/',
         companyID: req.session.companyID
       })
     })
-    .catch(error => console.log(error));
+    .catch(error => {
+      //console.log(error)
+      res.render('index/errorPage', {
+        error: error
+      }) 
+    });
 });
 
 // Pax Types - Add Page
@@ -41,15 +45,25 @@ router.get('/edit/:id',
   (req, res) => {
     axios.get(`${keys.sassTransferServiceAPIURI}/api/PaxTypes/${req.params.id}?&access_token=${req.session.serverAccessToken}`)
     .then(response => {
-      res.render('dashboard', {
-        dashboardLink: true,
-        paxTypesEditActive: true,
-        companyID: req.session.companyID,
-        paxType: response.data
-      })
-
+      if (response.data.companyId != req.session.companyID) {
+        req.flash('error_msg', 'Unauthorized');
+        res.redirect('/dashboard');
+      }
+      else {
+        res.render('dashboard', {
+          dashboardLink: true,
+          paxTypesEditActive: true,
+          companyID: req.session.companyID,
+          paxType: response.data
+        })
+      }
     })
-    .catch(error => console.log(error));
+    .catch(error => {
+      //console.log(error)
+      res.render('index/errorPage', {
+        error: error
+      })
+    });
 });
 
 // Create Pax Type
@@ -59,9 +73,9 @@ router.post('/',
   (req, res) => {
 
     // Set Variables
-    let age_from = parseInt(req.body.age_from);
-    let age_to = parseInt(req.body.age_to);
-    let name = req.body.name.trim();
+    let age_from = parseInt(req.body.age_from).replace(/<(?:.|\n)*?>/gm, '');
+    let age_to = parseInt(req.body.age_to).replace(/<(?:.|\n)*?>/gm, '');
+    let name = req.body.name.trim().replace(/<(?:.|\n)*?>/gm, '');
     let errors = [];
 
     if (!name.length > 0) {
@@ -97,7 +111,10 @@ router.post('/',
           res.redirect('/pax-types')
         })
         .catch(error => {
-          console.log(error);
+          //console.log(error);
+          res.render('index/errorPage', {
+            error: error
+          })
         })
     
     }
@@ -109,52 +126,75 @@ router.post('/edit/:id',
   ensureAuthenticated,
   (req, res) => {
 
-    // Set Variables
-    let age_from = parseInt(req.body.age_from);
-    let age_to = parseInt(req.body.age_to);
-    let name = req.body.name.trim();
-    let errors = [];
+    axios.get(`${keys.sassTransferServiceAPIURI}/api/PaxTypes/${req.params.id}?access_token=${req.session.serverAccessToken}`)
+    .then(response => {
+      // Check that the resouce belongs to the user requesting it
+      if (response.data.companyId != req.session.companyID) {
+        req.flash('error_msg', 'Unauthorized');
+        res.redirect('/dashboard');
+      }
+      else {
+        // Set Variables
+        let age_from = parseInt(req.body.age_from).replace(/<(?:.|\n)*?>/gm, '');
+        let age_to = parseInt(req.body.age_to).replace(/<(?:.|\n)*?>/gm, '');
+        let name = req.body.name.trim().replace(/<(?:.|\n)*?>/gm, '');
+        let errors = [];
 
-    if (!name.length > 0) {
-      errors.push({ text: 'Name cannot be blank.' })
-    }
-    if (!age_to > 0) {
-      errors.push({ text: 'Age To must be more than zero.' })
-    }
-    if (age_from >= age_to) {
-      errors.push({ text: 'Age From must be less than Age To' })
-    }
+        if (!name.length > 0) {
+          errors.push({ text: 'Name cannot be blank.' })
+        }
+        if (!age_to > 0) {
+          errors.push({ text: 'Age To must be more than zero.' })
+        }
+        if (age_from >= age_to) {
+          errors.push({ text: 'Age From must be less than Age To' })
+        }
 
-    if (errors.length > 0) {      
-      axios.get(`${keys.sassTransferServiceAPIURI}/api/PaxTypes/${req.params.id}?&access_token=${req.session.serverAccessToken}`)
-        .then(response => {
-          res.render('dashboard', {
-            dashboardLink: true,
-            paxTypesEditActive: true,
-            companyID: req.session.companyID,
-            paxType: response.data,
-            errors
-          });
-        })
-        .catch(error => console.log(error));
-    }
-    else {
-      // Send Post Request to API Server
-      axios.put(`${keys.sassTransferServiceAPIURI}/api/PaxTypes/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {
-        age_from,
-        age_to,
-        name,
-        companyId: req.session.companyID
+        if (errors.length > 0) {
+          axios.get(`${keys.sassTransferServiceAPIURI}/api/PaxTypes/${req.params.id}?&access_token=${req.session.serverAccessToken}`)
+            .then(response => {
+              res.render('dashboard', {
+                dashboardLink: true,
+                paxTypesEditActive: true,
+                companyID: req.session.companyID,
+                paxType: response.data,
+                errors
+              });
+            })
+            .catch(error => {
+              //console.log(error)
+              res.render('index/errorPage', {
+                error: error
+              })
+            });
+        }
+        else {
+          // Send Post Request to API Server
+          axios.put(`${keys.sassTransferServiceAPIURI}/api/PaxTypes/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {
+            age_from,
+            age_to,
+            name,
+            companyId: req.session.companyID
+          })
+            .then(response => {
+              req.flash('success_msg', 'Pax Type updated.')
+              res.redirect('/pax-types')
+            })
+            .catch(error => {
+              //console.log(error);
+              res.render('index/errorPage', {
+                error: error
+              })
+            })
+
+        }
+      }
+    })
+    .catch(error => {
+      res.render('index/errorPage', {
+        error: error
       })
-        .then(response => {
-          req.flash('success_msg', 'Pax Type updated.')
-          res.redirect('/pax-types')
-        })
-        .catch(error => {
-          console.log(error);
-        })
-
-    }
+    });
   })
 
 // Delete Pax Type
@@ -162,20 +202,39 @@ router.get('/delete/:id',
   authenticateServer,
   ensureAuthenticated,
   (req, res) => {
-    // Send Post Request to API Server
-    axios.delete(`${keys.sassTransferServiceAPIURI}/api/PaxTypes/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {
-      body: JSON.stringify([
-        req.params.id
-      ])
+
+    axios.get(`${keys.sassTransferServiceAPIURI}/api/PaxTypes/${req.params.id}?access_token=${req.session.serverAccessToken}`)
+    .then(response => {
+      // Check that the resouce belongs to the user requesting it
+      if (response.data.companyId != req.session.companyID) {
+        req.flash('error_msg', 'Unauthorized');
+        res.redirect('/dashboard');
+      }
+      else {
+        // Send Post Request to API Server
+        axios.delete(`${keys.sassTransferServiceAPIURI}/api/PaxTypes/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {
+          body: JSON.stringify([
+            req.params.id
+          ])
+        })
+          .then(response => {
+            console.log(response.data)
+            req.flash('success_msg', 'Pax Type deleted.')
+            res.redirect('/pax-types')
+          })
+          .catch(error => {
+            //console.log(error);
+            res.render('index/errorPage', {
+              error: error
+            })
+          })
+      }
     })
-      .then(response => {
-        console.log(response.data)
-        req.flash('success_msg', 'Pax Type deleted.')
-        res.redirect('/pax-types')
+    .catch(error => {
+      res.render('index/errorPage', {
+        error: error
       })
-      .catch(error => {
-        console.log(error);
-      })
+    });
 })
 
 module.exports = router;

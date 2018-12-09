@@ -1,7 +1,7 @@
+// Require JavaScript Libraries
 const express = require('express');
 const router = express.Router();
 const { ensureAuthenticated, authenticateServer } = require('../helpers/auth');
-const mongoose = require('mongoose');
 const axios = require('axios');
 const keys = require('../config/keys');
 const async = require('async');
@@ -18,12 +18,20 @@ router.get('/',
         .then(response => {
           callback(null, response.data);
         })
-        .catch(error => console.log(error));          
+        .catch(error => {
+          //console.log(error)
+          res.render('index/errorPage', {
+            error: error
+          }) 
+        });          
       }
       // more parallel queries can be chained here...
     }, (error, results) => {
       if(error) {
-        console.log(error);
+        //console.log(error);
+        res.render('index/errorPage', {
+          error: error
+        })
       }
       else {                
         res.render('dashboard', {
@@ -50,7 +58,12 @@ router.get('/add',
         companyID: req.session.companyID
       })
     })
-    .catch(error => console.log(error));
+    .catch(error => {
+      //console.log(error)
+      res.render('index/errorPage', {
+        error: error
+      }) 
+    });
 });
 
 // Bases - Edit Page
@@ -59,36 +72,64 @@ router.get('/edit/:id',
   ensureAuthenticated,
   (req, res) => {
 
-    // async - perform queries in parallel
-    async.parallel({
-      service: callback => {
-        axios.get(`${keys.sassTransferServiceAPIURI}/api/Services/${req.params.id}?&access_token=${req.session.serverAccessToken}`)
-          .then(response => {
-            callback(null, response.data);
-          })
-          .catch(error => console.log(error));
-      },
-      bases: callback => {
-        axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/bases?&access_token=${req.session.serverAccessToken}&filter[include]=place`)
-          .then(response => {
-            callback(null, response.data);
-          })
-          .catch(error => console.log(error));
+    axios.get(`${keys.sassTransferServiceAPIURI}/api/Services/${req.params.id}?access_token=${req.session.serverAccessToken}`)
+    .then(response => {
+      // Check that the resouce belongs to the user requesting it
+      if (response.data.companyId != req.session.companyID) {
+        req.flash('error_msg', 'Unauthorized');
+        res.redirect('/dashboard');
       }
-      // more parallel queries can be chained here...
-    }, (error, results) => {
-      if (error) {
-        console.log(error);
+      else {
+        // async - perform queries in parallel
+        async.parallel({
+          service: callback => {
+            axios.get(`${keys.sassTransferServiceAPIURI}/api/Services/${req.params.id}?&access_token=${req.session.serverAccessToken}`)
+              .then(response => {
+                callback(null, response.data);
+              })
+              .catch(error => {
+                //console.log(error)
+                res.render('index/errorPage', {
+                  error: error
+                })
+              });
+          },
+          bases: callback => {
+            axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/bases?&access_token=${req.session.serverAccessToken}&filter[include]=place`)
+              .then(response => {
+                callback(null, response.data);
+              })
+              .catch(error => {
+                //console.log(error)
+                res.render('index/errorPage', {
+                  error: error
+                })
+              });
+          }
+          // more parallel queries can be chained here...
+        }, (error, results) => {
+          if (error) {
+            //console.log(error);
+            res.render('index/errorPage', {
+              error: error
+            })
+          }
+          else {
+            res.render('dashboard', {
+              dashboardLink: true,
+              servicesEditActive: true,
+              companyID: req.session.companyID,
+              bases: results.bases,
+              service: results.service
+            })
+          }
+        });
       }
-      else {        
-        res.render('dashboard', {
-          dashboardLink: true,
-          servicesEditActive: true,
-          companyID: req.session.companyID,
-          bases: results.bases,
-          service: results.service
-        })
-      }
+    })
+    .catch(error => {
+      res.render('index/errorPage', {
+        error: error
+      })
     });
 });
 
@@ -99,8 +140,8 @@ router.post('/',
   (req, res) => {
 
     // Set Variables
-    let name = req.body.name.trim();
-    let baseId = req.body.baseId;
+    let name = req.body.name.trim().replace(/<(?:.|\n)*?>/gm, '');
+    let baseId = req.body.baseId.replace(/<(?:.|\n)*?>/gm, '');
     let errors = [];
     
     if (!name.length > 0) {
@@ -122,7 +163,12 @@ router.post('/',
           companyID: req.session.companyID
         });
       })
-      .catch(errors => console.log(errors));
+      .catch(errors => {
+        //console.log(errors)
+        res.render('index/errorPage', {
+          error: error
+        }) 
+      });
     }
     else {
       // Send Post Request to API Server
@@ -136,7 +182,10 @@ router.post('/',
           res.redirect('/services')
         })
         .catch(error => {
-          console.log(error);
+          //console.log(error);
+          res.render('index/errorPage', {
+            error: error
+          })
         })
     
     }
@@ -148,68 +197,100 @@ router.post('/edit/:id',
   ensureAuthenticated,
   (req, res) => {
 
-    // Set Variables
-    let name = req.body.name.trim();
-    let baseId = req.body.baseId;
-    let errors = [];
+    axios.get(`${keys.sassTransferServiceAPIURI}/api/Services/${req.params.id}?access_token=${req.session.serverAccessToken}`)
+    .then(response => {
+      // Check that the resouce belongs to the user requesting it
+      if (response.data.companyId != req.session.companyID) {
+        req.flash('error_msg', 'Unauthorized');
+        res.redirect('/dashboard');
+      }
+      else {
+        // Set Variables
+        let name = req.body.name.trim().replace(/<(?:.|\n)*?>/gm, '');
+        let baseId = req.body.baseId.replace(/<(?:.|\n)*?>/gm, '');
+        let errors = [];
 
-    if (!name.length > 0) {
-      errors.push({ text: 'Base Name cannot be blank.' });
-    }
-    if(!baseId) {
-      errors.push({text: "Please select the Service Base."});
-    }
-    if (errors.length > 0) {      
-
-      // async - perform queries in parallel
-      async.parallel({
-        service: callback => {
-          axios.get(`${keys.sassTransferServiceAPIURI}/api/Services/${req.params.id}?&access_token=${req.session.serverAccessToken}`)
-            .then(response => {
-              callback(null, response.data);
-            })
-            .catch(error => console.log(error));
-        },
-        bases: callback => {
-          axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/bases?&access_token=${req.session.serverAccessToken}`)
-            .then(response => {
-              callback(null, response.data);
-            })
-            .catch(error => console.log(error));
+        if (!name.length > 0) {
+          errors.push({ text: 'Base Name cannot be blank.' });
         }
-        // more parallel queries can be chained here...
-      }, (error, results) => {
-        if (error) {
-          console.log(error);
+        if (!baseId) {
+          errors.push({ text: "Please select the Service Base." });
+        }
+        if (errors.length > 0) {
+
+          // async - perform queries in parallel
+          async.parallel({
+            service: callback => {
+              axios.get(`${keys.sassTransferServiceAPIURI}/api/Services/${req.params.id}?&access_token=${req.session.serverAccessToken}`)
+                .then(response => {
+                  callback(null, response.data);
+                })
+                .catch(error => {
+                  //console.log(error)
+                  res.render('index/errorPage', {
+                    error: error
+                  })
+                });
+            },
+            bases: callback => {
+              axios.get(`${keys.sassTransferServiceAPIURI}/api/Companies/${req.session.companyID}/bases?&access_token=${req.session.serverAccessToken}`)
+                .then(response => {
+                  callback(null, response.data);
+                })
+                .catch(error => {
+                  //console.log(error)
+                  res.render('index/errorPage', {
+                    error: error
+                  })
+                });
+            }
+            // more parallel queries can be chained here...
+          }, (error, results) => {
+            if (error) {
+              //console.log(error);
+              res.render('index/errorPage', {
+                error: error
+              })
+            }
+            else {
+              res.render('dashboard', {
+                dashboardLink: true,
+                servicesEditActive: true,
+                companyID: req.session.companyID,
+                bases: results.bases,
+                service: results.service,
+                errors
+              })
+            }
+          });
+
         }
         else {
-          res.render('dashboard', {
-            dashboardLink: true,
-            servicesEditActive: true,
-            companyID: req.session.companyID,
-            bases: results.bases,
-            service: results.service,            
-            errors
+          // Send Post Request to API Server
+          axios.put(`${keys.sassTransferServiceAPIURI}/api/Services/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {
+            name,
+            baseId,
+            companyId: req.session.companyID
           })
+            .then(response => {
+              req.flash('success_msg', 'Service updated.')
+              res.redirect('/services')
+            })
+            .catch(error => {
+              //console.log(error);
+              res.render('index/errorPage', {
+                error: error
+              })
+            });
         }
-      });
-
-    }
-    else {
-      // Send Post Request to API Server
-      axios.put(`${keys.sassTransferServiceAPIURI}/api/Services/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {  
-        name,
-        baseId,
-        companyId: req.session.companyID
+      }
+    })
+    .catch(error => {
+      res.render('index/errorPage', {
+        error: error
       })
-        .then(response => {
-          req.flash('success_msg', 'Service updated.')
-          res.redirect('/services')
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }
+    });
+    
   })
 
 // Service Delete
@@ -217,20 +298,37 @@ router.get('/delete/:id',
   authenticateServer,
   ensureAuthenticated,
   (req, res) => {
-    // Send Post Request to API Server
-    axios.delete(`${keys.sassTransferServiceAPIURI}/api/Services/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {
-      body: JSON.stringify([
-        req.params.id
-      ])
+    axios.get(`${keys.sassTransferServiceAPIURI}/api/Services/${req.params.id}?access_token=${req.session.serverAccessToken}`)
+    .then(response => {
+      // Check that the resouce belongs to the user requesting it
+      if (response.data.companyId != req.session.companyID) {
+        req.flash('error_msg', 'Unauthorized');
+        res.redirect('/dashboard');
+      }
+      else {
+        // Send Post Request to API Server
+        axios.delete(`${keys.sassTransferServiceAPIURI}/api/Services/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {
+          body: JSON.stringify([
+            req.params.id
+          ])
+        })
+          .then(response => {
+            req.flash('success_msg', 'Service deleted.')
+            res.redirect('/services')
+          })
+          .catch(error => {
+            //console.log(error);
+            res.render('index/errorPage', {
+              error: error
+            })
+          })
+      }
     })
-      .then(response => {
-        console.log(response.data)
-        req.flash('success_msg', 'Service deleted.')
-        res.redirect('/services')
+    .catch(error => {
+      res.render('index/errorPage', {
+        error: error
       })
-      .catch(error => {
-        console.log(error);
-      })
+    });
 })
 
 module.exports = router;

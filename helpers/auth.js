@@ -86,7 +86,10 @@ module.exports = {
               next();
             })
             .catch(error => {
-              console.log(error);
+              //console.log(error);
+              res.render('index/errorPage', {
+                error: error
+              })
             });
         } 
         else {           
@@ -95,7 +98,10 @@ module.exports = {
         }
       })
       .catch(error => {
-        console.log(error)
+        //console.log(error)
+        res.render('index/errorPage', {
+          error: error
+        })
       });
     
   }

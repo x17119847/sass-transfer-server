@@ -1,12 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { ensureAuthenticated, authenticateServer } = require('../helpers/auth');
-const mongoose = require('mongoose');
 const axios = require('axios');
 const keys = require('../config/keys');
-
-// Load Models
-
 
 // Drivers Index
 router.get('/',
@@ -22,7 +18,12 @@ router.get('/',
           companyID: req.session.companyID
         })
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        //console.log(error)
+        res.render('index/errorPage', {
+          error: error
+        })
+      });
   });
 
 
@@ -46,15 +47,26 @@ router.get('/edit/:id',
   (req, res) => {
     axios.get(`${keys.sassTransferServiceAPIURI}/api/Drivers/${req.params.id}?&access_token=${req.session.serverAccessToken}`)
       .then(response => {
-        res.render('dashboard', {
-          dashboardLink: true,
-          driversEditActive: true,
-          companyID: req.session.companyID,
-          driver: response.data
-        })
-
+        // Check that the resouce belongs to the user requesting it
+        if(response.data.companyId != req.session.companyID) {
+          req.flash('error_msg', 'Unauthorized');
+          res.redirect('/dashboard');
+        }
+        else {
+          res.render('dashboard', {
+            dashboardLink: true,
+            driversEditActive: true,
+            companyID: req.session.companyID,
+            driver: response.data
+          })
+        }
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        //console.log(error)
+        res.render('index/errorPage', {
+          error: error
+        })
+      });
   });
 
 // Create Driver
@@ -63,7 +75,7 @@ router.post('/',
   ensureAuthenticated,
   (req, res) => {
 
-    let name = req.body.name.trim();
+    let name = req.body.name.trim().replace(/<(?:.|\n)*?>/gm, '');
 
     if (name.length == 0) {
       req.flash('error_msg', 'Please insert the driver name');
@@ -80,7 +92,10 @@ router.post('/',
           res.redirect('/drivers')
         })
         .catch(error => {
-          console.log(error);
+          //console.log(error);
+          res.render('index/errorPage', {
+            error: error
+          })
         })
 
     }
@@ -92,27 +107,45 @@ router.post('/edit/:id',
   ensureAuthenticated,
   (req, res) => {
 
-    let name = req.body.name.trim();
+    axios.get(`${keys.sassTransferServiceAPIURI}/api/Drivers/${req.params.id}?access_token=${req.session.serverAccessToken}`)
+    .then(response => {
+      // Check that the resouce belongs to the user requesting it
+      if (response.data.companyId != req.session.companyID) {
+        req.flash('error_msg', 'Unauthorized');
+        res.redirect('/dashboard');
+      }
+      else {
+        let name = req.body.name.trim().replace(/<(?:.|\n)*?>/gm, '');
 
-    if (name.length == 0) {
-      req.flash('error_msg', 'Please insert the driver name');
-      res.redirect('/drivers/edit/' + req.params.id);
-    }
-    else {
-      // Send Post Request to API Server
-      axios.put(`${keys.sassTransferServiceAPIURI}/api/Drivers/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {
-        name,
-        companyId: req.session.companyID
+        if (name.length == 0) {
+          req.flash('error_msg', 'Please insert the driver name');
+          res.redirect('/drivers/edit/' + req.params.id);
+        }
+        else {
+          // Send Post Request to API Server
+          axios.put(`${keys.sassTransferServiceAPIURI}/api/Drivers/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {
+            name,
+            companyId: req.session.companyID
+          })
+            .then(response => {
+              req.flash('success_msg', 'Driver updated.')
+              res.redirect('/drivers')
+            })
+            .catch(error => {
+              //console.log(error);
+              res.render('index/errorPage', {
+                error: error
+              })
+            })
+
+        }
+      }
+    })
+    .catch(error => {
+      res.render('index/errorPage', {
+        error: error
       })
-        .then(response => {
-          req.flash('success_msg', 'Driver updated.')
-          res.redirect('/drivers')
-        })
-        .catch(error => {
-          console.log(error);
-        })
-
-    }
+    });
   })
 
 // Delete Driver
@@ -120,19 +153,37 @@ router.get('/delete/:id',
   authenticateServer,
   ensureAuthenticated,
   (req, res) => {
-    // Send Post Request to API Server
-    axios.delete(`${keys.sassTransferServiceAPIURI}/api/Drivers/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {
-      body: JSON.stringify([
-        req.params.id
-      ])
-    })
+    axios.get(`${keys.sassTransferServiceAPIURI}/api/Drivers/${req.params.id}?access_token=${req.session.serverAccessToken}`)
       .then(response => {
-        req.flash('success_msg', 'Driver deleted.')
-        res.redirect('/drivers')
+        // Check that the resouce belongs to the user requesting it
+        if (response.data.companyId != req.session.companyID) {
+          req.flash('error_msg', 'Unauthorized');
+          res.redirect('/dashboard');
+        }
+        else {
+          // Send Post Request to API Server
+          axios.delete(`${keys.sassTransferServiceAPIURI}/api/Drivers/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {
+            body: JSON.stringify([
+              req.params.id
+            ])
+          })
+            .then(response => {
+              req.flash('success_msg', 'Driver deleted.')
+              res.redirect('/drivers')
+            })
+            .catch(error => {
+              //console.log(error);
+              res.render('index/errorPage', {
+                error: error
+              })
+            })
+        }
       })
       .catch(error => {
-        console.log(error);
-      })
+        res.render('index/errorPage', {
+          error: error
+        })
+      });
   })
 
 module.exports = router;

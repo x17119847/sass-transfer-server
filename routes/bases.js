@@ -1,7 +1,7 @@
+// Require JavaScript Libraries
 const express = require('express');
 const router = express.Router();
 const { ensureAuthenticated, authenticateServer } = require('../helpers/auth');
-const mongoose = require('mongoose');
 const axios = require('axios');
 const keys = require('../config/keys');
 const async = require('async');
@@ -18,12 +18,20 @@ router.get('/',
         .then(response => {
           callback(null, response.data);
         })
-        .catch(error => console.log(error));          
+        .catch(error => {
+          //console.log(error)
+          res.render('index/errorPage', {
+            error: error
+          })
+        });          
       }
       // more parallel queries can be chained here...
     }, (error, results) => {
       if(error) {
-        console.log(error);
+        //console.log(error);
+        res.render('index/errorPage', {
+          error: error
+        })
       }
       else {                
         res.render('dashboard', {
@@ -59,14 +67,29 @@ router.get('/edit/:id',
       base: callback => {
         axios.get(`${keys.sassTransferServiceAPIURI}/api/Bases/${req.params.id}?&access_token=${req.session.serverAccessToken}&filter[include]=place`)
           .then(response => {
-            callback(null, response.data);
+            // Check that the resouce belongs to the user requesting it
+            if (response.data.companyId != req.session.companyID) {
+              req.flash('error_msg', 'Unauthorized');
+              res.redirect('/dashboard');
+            } 
+            else {
+              callback(null, response.data);
+            }
           })
-          .catch(error => console.log(error));
+          .catch(error => {
+            //console.log(error)
+            res.render('index/errorPage', {
+              error: error
+            })
+          });
       }
       // more parallel queries can be chained here...
     }, (error, results) => {
       if (error) {
-        console.log(error);
+        //console.log(error);
+        res.render('index/errorPage', {
+          error: error
+        })
       }
       else {        
         res.render('dashboard', {
@@ -86,9 +109,9 @@ router.post('/',
   (req, res) => {
 
     // Set Variables
-    let name = req.body.name.trim();
-    let countyId = req.body.countyId;
-    let countyName = req.body.countyName;
+    let name = req.body.name.trim().replace(/<(?:.|\n)*?>/gm, '');
+    let countyId = req.body.countyId.replace(/<(?:.|\n)*?>/gm, '');
+    let countyName = req.body.countyName.replace(/<(?:.|\n)*?>/gm, '');
     let countryCode = 'IE';
     let errors = [];
 
@@ -133,9 +156,18 @@ router.post('/',
                 req.flash('success_msg', 'Base created.')
                 res.redirect('/bases')
               })
-              .catch(error => console.log(error));
+              .catch(error => {
+                //console.log(error)
+                res.render('index/errorPage', {
+                  error: error
+                })
+              });
           })
-          .catch();
+          .catch(error => {
+            res.render('index/errorPage', {
+              error: error
+            })
+          });
         }
         else {          
           let placeId = place[0].id;
@@ -148,11 +180,19 @@ router.post('/',
               req.flash('success_msg', 'Base created.')
               res.redirect('/bases')
             })
-            .catch(error => console.log(error));
+            .catch(error => {
+              //console.log(error)
+              res.render('index/errorPage', {
+                error: error
+              })
+            });
         }
       })
       .catch(error => {
-        console.log(error)
+        //console.log(error)
+        res.render('index/errorPage', {
+          error: error
+        })
       });
     
     }
@@ -164,114 +204,172 @@ router.post('/edit/:id',
   ensureAuthenticated,
   (req, res) => {
 
-    // Set Variables
-    let name = req.body.name.trim();
-    let placeId = req.body.placeId;
-    let countyId = req.body.countyId;
-    let countyName = req.body.countyName;
-    let countryCode = 'IE';
-    let errors = [];
-    
-    if (!name.length > 0) {
-      errors.push({ text: 'Base Name cannot be blank.' })
-    }
+    axios.get(`${keys.sassTransferServiceAPIURI}/api/Bases/${req.params.id}?access_token=${req.session.serverAccessToken}`)
+    .then(response => {
+      // Check that the resouce belongs to the user requesting it
+      if (response.data.companyId != req.session.companyID) {
+        req.flash('error_msg', 'Unauthorized');
+        res.redirect('/dashboard');
+      }
+      else {
+        // Set Variables
+        let name = req.body.name.trim().replace(/<(?:.|\n)*?>/gm, '');
+        let placeId = req.body.placeId.replace(/<(?:.|\n)*?>/gm, '');
+        let countyId = req.body.countyId.replace(/<(?:.|\n)*?>/gm, '');
+        let countyName = req.body.countyName.replace(/<(?:.|\n)*?>/gm, '');
+        let countryCode = 'IE';
+        let errors = [];
 
-    if (errors.length > 0) {      
-
-      // async - perform queries in parallel
-      async.parallel({
-        base: callback => {
-          axios.get(`${keys.sassTransferServiceAPIURI}/api/Bases/${req.params.id}?&access_token=${req.session.serverAccessToken}&filter[include]=place`)
-            .then(response => {
-              callback(null, response.data);
-            })
-            .catch(error => console.log(error));
+        if (!name.length > 0) {
+          errors.push({ text: 'Base Name cannot be blank.' })
         }
-        // more parallel queries can be chained here...
-      }, (error, results) => {
-        if (error) {
-          console.log(error);
+
+        if (errors.length > 0) {
+
+          // async - perform queries in parallel
+          async.parallel({
+            base: callback => {
+              axios.get(`${keys.sassTransferServiceAPIURI}/api/Bases/${req.params.id}?&access_token=${req.session.serverAccessToken}&filter[include]=place`)
+                .then(response => {
+                  callback(null, response.data);
+                })
+                .catch(error => {
+                  //console.log(error)
+                  res.render('index/errorPage', {
+                    error: error
+                  })
+                });
+            }
+            // more parallel queries can be chained here...
+          }, (error, results) => {
+            if (error) {
+              //console.log(error);
+              res.render('index/errorPage', {
+                error: error
+              })
+            }
+            else {
+              res.render('dashboard', {
+                dashboardLink: true,
+                basesEditActive: true,
+                companyID: req.session.companyID,
+                base: results.base,
+                errors,
+                countyId
+              })
+            }
+          });
+
         }
         else {
-          res.render('dashboard', {
-            dashboardLink: true,
-            basesEditActive: true,
-            companyID: req.session.companyID,
-            base: results.base,            
-            errors,
-            countyId
-          })
-        }
-      });
 
-    }
-    else {
-      
-      // Send Post Request to API Server
-      // Check if place already exists, if not, insert.
-      axios.get(`${keys.sassTransferServiceAPIURI}/api/Places?filter={"where":{"countyId":"${countyId}"}}&access_token=${req.session.serverAccessToken}`)
-        .then(response => {
-          let place = response.data;
-          if (!place.length > 0) {
-            axios.post(`${keys.sassTransferServiceAPIURI}/api/Places?access_token=${req.session.serverAccessToken}`, {
-              countyId,
-              countyName,
-              countryCode
-            })
-              .then(response => {
-                let placeId = response.data.id;
+          // Send Post Request to API Server
+          // Check if place already exists, if not, insert.
+          axios.get(`${keys.sassTransferServiceAPIURI}/api/Places?filter={"where":{"countyId":"${countyId}"}}&access_token=${req.session.serverAccessToken}`)
+            .then(response => {
+              let place = response.data;
+              if (!place.length > 0) {
+                axios.post(`${keys.sassTransferServiceAPIURI}/api/Places?access_token=${req.session.serverAccessToken}`, {
+                  countyId,
+                  countyName,
+                  countryCode
+                })
+                  .then(response => {
+                    let placeId = response.data.id;
+                    axios.put(`${keys.sassTransferServiceAPIURI}/api/Bases/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {
+                      name,
+                      companyId: req.session.companyID,
+                      placeId
+                    })
+                      .then(response => {
+                        req.flash('success_msg', 'Base updated.')
+                        res.redirect('/bases')
+                      })
+                      .catch(error => {
+                        //console.log(error)
+                        res.render('index/errorPage', {
+                          error: error
+                        })
+                      });
+                  })
+                  .catch(error => {
+                    res.render('index/errorPage', {
+                      error: error
+                    })
+                  });
+              }
+              else {
+                let placeId = place[0].id;
                 axios.put(`${keys.sassTransferServiceAPIURI}/api/Bases/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {
                   name,
                   companyId: req.session.companyID,
                   placeId
                 })
                   .then(response => {
-                    req.flash('success_msg', 'Base updated.')
+                    req.flash('success_msg', 'Base created.')
                     res.redirect('/bases')
                   })
-                  .catch(error => console.log(error));
-              })
-              .catch();
-          }
-          else {
-            let placeId = place[0].id;
-            axios.put(`${keys.sassTransferServiceAPIURI}/api/Bases/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {
-              name,
-              companyId: req.session.companyID,
-              placeId
+                  .catch(error => {
+                    //console.log(error)
+                    res.render('index/errorPage', {
+                      error: error
+                    })
+                  });
+              }
             })
-              .then(response => {
-                req.flash('success_msg', 'Base created.')
-                res.redirect('/bases')
+            .catch(error => {
+              //console.log(error)
+              res.render('index/errorPage', {
+                error: error
               })
-              .catch(error => console.log(error));
-          }
-        })
-        .catch(error => {
-          console.log(error)
-        });
-
-    }
-  })
+            });
+        }
+      }
+    })
+    .catch(error => {
+      res.render('index/errorPage', {
+        error: error
+      });
+    });
+  });
 
 // Base Delete
 router.get('/delete/:id', 
   authenticateServer,
   ensureAuthenticated,
   (req, res) => {
-    // Send Post Request to API Server
-    axios.delete(`${keys.sassTransferServiceAPIURI}/api/Bases/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {
-      body: JSON.stringify([
-        req.params.id
-      ])
+
+    axios.get(`${keys.sassTransferServiceAPIURI}/api/Bases/${req.params.id}?access_token=${req.session.serverAccessToken}`)
+    .then(response => {
+      // Check that the resouce belongs to the user requesting it
+      if (response.data.companyId != req.session.companyID) {
+        req.flash('error_msg', 'Unauthorized');
+        res.redirect('/dashboard');
+      }
+      else {
+        // Send Post Request to API Server
+        axios.delete(`${keys.sassTransferServiceAPIURI}/api/Bases/${req.params.id}?&access_token=${req.session.serverAccessToken}`, {
+          body: JSON.stringify([
+            req.params.id
+          ])
+        })
+          .then(response => {
+            req.flash('success_msg', 'Base deleted.')
+            res.redirect('/bases')
+          })
+          .catch(error => {
+            //console.log(error);
+            res.render('index/errorPage', {
+              error: error
+            })
+          })
+      }
     })
-      .then(response => {
-        req.flash('success_msg', 'Base deleted.')
-        res.redirect('/bases')
-      })
-      .catch(error => {
-        console.log(error);
-      })
+    .catch(error => {
+      res.render('index/errorPage', {
+        error: error
+      });
+    })
 })
 
 module.exports = router;

@@ -12,7 +12,7 @@ const User = mongoose.model('users');
 // Update Company
 router.post('/', (req, res) => {
 
-  let name = req.body.name.trim();
+  let name = req.body.name.trim().replace(/<(?:.|\n)*?>/gm, '');
 
   if(!name || name.length == 0) {
     req.flash('error_msg', 'Name cannot be blank');
@@ -30,7 +30,10 @@ router.post('/', (req, res) => {
         res.redirect('/dashboard/company')
       })
       .catch(error => {
-        console.log(error);
+        //console.log(error);
+        res.render('index/errorPage', {
+          error: error
+        })
       })
   
   }

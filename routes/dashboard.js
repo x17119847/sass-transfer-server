@@ -40,7 +40,12 @@ router.get('/company',
         company: response.data
       })
     })
-    .catch(error => console.log(error));
+    .catch(error => {
+      //console.log(error)
+      res.render('index/errorPage', {
+        error: error
+      })
+    });
 });
 
 // Bookings
@@ -56,7 +61,12 @@ router.get('/bookings',
         companyID: req.session.companyID
       })
     })
-    .catch(error => console.log(error));
+    .catch(error => {
+      //console.log(error)
+      res.render('index/errorPage', {
+        error: error
+      })
+    });
 });
 
 // Customers
@@ -72,7 +82,12 @@ router.get('/customers',
           companyID: req.session.companyID
         })
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        //console.log(error)
+        res.render('index/errorPage', {
+          error: error
+        })
+      });
   });
 
 

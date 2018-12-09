@@ -1,9 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const {ensureAuthenticated} = require('../helpers/auth');
-const {ensureGuest} = require('../helpers/auth');
-const mongoose = require('mongoose');
-
 
 // Index
 router.get('/', (req, res) => {

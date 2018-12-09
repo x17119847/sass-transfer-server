@@ -1,3 +1,4 @@
+// Require the necessary JavaScript Libraries
 const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
@@ -9,14 +10,13 @@ const bodyParser = require('body-parser');
 const flash = require('connect-flash');
 const axios = require('axios');
 
-// Load Models
+// Load the local database User Model
 require('./models/User');
 
-
-// Passport Config
+// Passport Configuration
 require('./config/passport')(passport);
 
-// Load Routes
+// Load HTTP Route handlers
 const index = require('./routes/index');
 const auth = require('./routes/auth');
 const dashboard = require('./routes/dashboard');
@@ -32,14 +32,15 @@ const routes = require('./routes/routes');
 // Load Keys
 const keys = require('./config/keys');
 
-// Personally made NPM Package - Handlebars Helpers NCI
+// Load Custom made NPM Package - Handlebars Helpers NCI
 const {
   times,
   isSelected,
-  applyValue
+  applyValue,
+  stripTags
 } = require('handlebars-helpers-nci');
 
-// Mongoose Connect
+// Database connection - Mongoose
 mongoose.connect(keys.mongoURI, {
   useNewUrlParser: true
 })
@@ -53,22 +54,23 @@ mongoose.connect(keys.mongoURI, {
 // Initialize Express App
 const app = express();
 
-// Body Parser
+// Load Body Parser
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-// Handlebars Middleware
+// Load Handlebars Middleware as the Template Engine
 app.engine('handlebars', exphbs({
   helpers: {
     times,
     isSelected,
-    applyValue
+    applyValue,
+    stripTags
   },
   defaultLayout: 'main'
 }));
 app.set('view engine', 'handlebars');
 
-// Cookie Parser and Express Session Middleware
+// Load Cookie Parser and Express Session Middleware
 app.use(cookieParser());
 app.use(session({
   secret: 'x17118747',
@@ -76,11 +78,11 @@ app.use(session({
   saveUninitialized: false
 }))
 
-// Passport Middleware
+// Load Passport Middleware into the application
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Flash Middleware
+// Load Flash Middleware - used for displaying messages
 app.use(flash());
 
 // Set Global Vars
@@ -92,10 +94,10 @@ app.use((req, res, next) => {
   next();
 });
 
-// Set Static Folder
+// Set Static Folder for CSS, JS and images.
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Use Routes
+// Use Routes in the application
 app.use('/', index);
 app.use('/auth', auth);
 app.use('/dashboard', dashboard);
@@ -108,6 +110,7 @@ app.use('/bases', bases);
 app.use('/services', services);
 app.use('/routes', routes);
 
+// Start server
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`)
