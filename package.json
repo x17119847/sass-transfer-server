@@ -1,14 +1,15 @@
 {
-  "name": "storybooks",
+  "name": "SASS-Transfer-Server-Website",
   "version": "1.0.0",
-  "description": "",
+  "description": "This is the Web Server that will connect to the REST API service",
+  "homepage": "https://sass-transfer-server.herokuapp.com/",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "NCI Student number: 17119847",
+  "license": "UNLICENSED",
   "dependencies": {
     "async": "^2.6.1",
     "axios": "^0.18.0",
@@ -34,5 +35,9 @@
   "devDependencies": {
     "eslint-config-loopback": "^8.0.0",
     "start-server-and-test": "^1.7.11"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/x17119847/sass-transfer-server"
   }
 }
